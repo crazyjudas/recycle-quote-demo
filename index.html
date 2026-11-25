@@ -1,0 +1,2359 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>手机回收报价 · 官方 WeUI v2.6.16 高保真原型</title>
+<link rel="stylesheet" href="weui.min.css" />
+<style>
+  /* ===== Refined WeChat Native Design System (Impeccable Operate + WeUI v2.6.16) ===== */
+  :root {
+    --phone-width: 375px;
+    --bg-canvas: #F5F6F7;
+    --bg-surface: #FFFFFF;
+    --bg-subtle: #F2F3F5;
+    --bg-hover: #EBEDF0;
+    --hairline: rgba(0, 0, 0, 0.06);
+    --hairline-strong: rgba(0, 0, 0, 0.09);
+    --ink-1: rgba(0, 0, 0, 0.90);
+    --ink-2: rgba(0, 0, 0, 0.56);
+    --ink-3: rgba(0, 0, 0, 0.36);
+    --brand: #07C160;
+    --brand-tint: rgba(7, 193, 96, 0.09);
+    --brand-border: rgba(7, 193, 96, 0.42);
+    --link: #576B95;
+    --price-red: #FA5151;
+    --sp-1: 4px;
+    --sp-2: 8px;
+    --sp-3: 12px;
+    --sp-4: 16px;
+    --sp-5: 24px;
+    --r-card: 12px;
+    --r-btn: 10px;
+    --r-chip: 7px;
+    --fs-hero: 44px;
+    --fs-price: 20px;
+    --fs-h1: 18px;
+    --fs-nav: 17px;
+    --fs-body: 15.5px;
+    --fs-sub: 13.5px;
+    --fs-cap: 12px;
+  }
+  html, body {
+    margin: 0; padding: 0; background: #111827; color: #E5E7EB; min-height: 100vh;
+    -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+  }
+  .workspace {
+    display: flex; justify-content: center; align-items: flex-start;
+    gap: 28px; padding: 24px 20px 40px; max-width: 1220px; margin: 0 auto; flex-wrap: wrap;
+  }
+  .phone-stage { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  .stage-caption { font-size: 12px; color: #9CA3AF; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: center; }
+  .stage-badge { background: rgba(7,193,96,0.18); color: #4ADE80; padding: 2px 8px; border-radius: 999px; font-weight: 600; }
+
+  .phone-shell {
+    width: calc(var(--phone-width) + 20px); height: 832px;
+    background: #1F2937; border-radius: 46px; padding: 10px;
+    box-shadow: 0 26px 60px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255,255,255,0.12);
+    transition: width 0.2s ease;
+  }
+  .phone-screen {
+    width: var(--phone-width); height: 812px;
+    background: var(--bg-canvas); color: var(--ink-1);
+    border-radius: 36px; overflow: hidden;
+    position: relative; transform: translateZ(0);
+    display: flex; flex-direction: column;
+    transition: width 0.2s ease;
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", sans-serif;
+    --weui-BG-0: var(--bg-canvas);
+    --weui-BG-1: var(--bg-subtle);
+    --weui-BG-2: var(--bg-surface);
+    --weui-FG-0: var(--ink-1);
+    --weui-FG-1: var(--ink-2);
+    --weui-FG-2: var(--ink-3);
+    --weui-FG-3: var(--hairline);
+    caret-color: var(--brand);
+  }
+  .phone-screen ::selection { background: rgba(7, 193, 96, 0.16); color: var(--ink-1); }
+  .phone-screen.large-font { font-size: 17.5px; }
+  .phone-screen.large-font .weui-cell { font-size: 17.5px; }
+
+  /* Native WeChat Status + NavBar */
+  .wx-nav-wrap { background: var(--bg-surface); color: var(--ink-1); flex-shrink: 0; user-select: none; position: relative; z-index: 600; }
+  .wx-nav-wrap.nav-white { background: var(--bg-surface); border-bottom: 0.5px solid var(--hairline); }
+  .wx-statusbar {
+    height: 44px; padding: 14px 22px 0;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums;
+  }
+  .wx-navbar { height: 44px; padding: 0 12px; display: flex; align-items: center; justify-content: space-between; }
+  .wx-nav-left { width: 88px; display: flex; align-items: center; }
+  .wx-back-btn {
+    display: inline-flex; align-items: center; min-width: 44px; min-height: 44px;
+    background: none; border: none; color: var(--ink-1); cursor: pointer; padding: 4px;
+    transition: opacity 0.12s ease;
+  }
+  .wx-back-btn:active { opacity: 0.5; }
+  .wx-nav-title {
+    font-size: var(--fs-nav); font-weight: 600; letter-spacing: -0.01em;
+    text-align: center; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .wx-capsule {
+    width: 87px; height: 32px; border-radius: 16px;
+    background: rgba(255,255,255,0.85); border: 0.5px solid rgba(0,0,0,0.10);
+    display: flex; align-items: center; justify-content: space-evenly; cursor: pointer; color: #000;
+  }
+  .wx-capsule-div { width: 0.5px; height: 15px; background: rgba(0,0,0,0.14); }
+
+  .page-body { flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; background: var(--bg-canvas); position: relative; }
+  .page-body::-webkit-scrollbar, .brand-rail::-webkit-scrollbar, .quotes-right::-webkit-scrollbar { width: 3px; }
+  .page-body::-webkit-scrollbar-thumb, .brand-rail::-webkit-scrollbar-thumb, .quotes-right::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); border-radius: 99px; }
+
+  /* Unified Inset Card Architecture (Declares elevation once via crisp surface contrast, zero nested cards!) */
+  .ui-card {
+    margin: 10px 12px 0;
+    background: var(--bg-surface);
+    border-radius: var(--r-card);
+    overflow: hidden;
+  }
+  .ui-card-hd {
+    padding: 12px 14px 8px;
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  }
+  .ui-card-title { font-size: 14px; font-weight: 600; color: var(--ink-1); letter-spacing: -0.01em; }
+  .ui-card-action { font-size: 13px; color: var(--link); text-decoration: none; font-weight: 400; }
+  .ui-card-action:active { opacity: 0.6; }
+  .ui-section-hd {
+    padding: 14px 16px 6px;
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    font-size: 12.5px; font-weight: 500; color: var(--ink-2);
+  }
+
+  /* Clean WeUI cell overrides inside inset cards (subtle inset hairlines, zero double borders) */
+  .phone-screen .weui-cells { margin-top: 0; background: transparent; }
+  .phone-screen .weui-cells::before, .phone-screen .weui-cells::after { display: none; }
+  .phone-screen .weui-cell { padding: 12px 14px; background: var(--bg-surface); transition: background-color 0.12s ease; }
+  .phone-screen .weui-cell:active { background: var(--bg-subtle); }
+  .phone-screen .weui-cell::before { left: 14px; border-top-color: var(--hairline); }
+  .phone-screen .weui-cell_access .weui-cell__ft { padding-right: 18px; }
+  .phone-screen .weui-cell_access .weui-cell__ft::after { color: rgba(0, 0, 0, 0.24); }
+  .phone-screen .weui-panel { margin-top: 10px; background: var(--bg-surface); }
+  .phone-screen .weui-panel::before, .phone-screen .weui-panel::after { display: none; }
+  .phone-screen .weui-cells__title {
+    margin: 0; padding: 14px 16px 6px;
+    font-size: 12.5px; font-weight: 500; color: var(--ink-2);
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  }
+  .phone-screen .weui-toptips { top: 96px; z-index: 6500; border-radius: 8px; left: 16px; right: 16px; width: auto; padding: 9px 14px; font-size: 13.5px; }
+  .phone-screen .weui-toptips.toptips-ok { background: var(--brand); }
+  .phone-screen .weui-toptips.toptips-info { background: rgba(17,24,39,0.88); }
+
+  /* Native TabBar (Calm, refined hairline) */
+  .wx-tabbar-shell { flex-shrink: 0; background: var(--bg-surface); border-top: 0.5px solid var(--hairline); padding-bottom: 14px; position: relative; }
+  .wx-tabbar-shell::after {
+    content: ""; position: absolute; bottom: 5px; left: 50%; transform: translateX(-50%);
+    width: 130px; height: 4px; border-radius: 99px; background: rgba(0,0,0,0.18); z-index: 600;
+  }
+  .phone-screen .weui-tabbar { background: transparent; padding-top: 4px; }
+  .phone-screen .weui-tabbar::before { display: none; }
+  .phone-screen .weui-tabbar__icon {
+    width: 22px; height: 22px; margin: 0 auto 2px;
+    display: flex; align-items: center; justify-content: center; color: var(--ink-2);
+  }
+  .phone-screen .weui-tabbar__label { font-size: 10.5px; color: var(--ink-2); line-height: 1.3; }
+  .phone-screen .weui-bar__item_on .weui-tabbar__icon,
+  .phone-screen .weui-bar__item_on .weui-tabbar__label { color: var(--brand); font-weight: 600; }
+
+  /* Unified Search Pill (Replaces clunky gray WeUI search bar outer chrome) */
+  .search-top-bar {
+    background: var(--bg-surface);
+    padding: 8px 12px 10px;
+    border-bottom: 0.5px solid var(--hairline);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .search-pill {
+    flex: 1; height: 36px; padding: 0 12px;
+    background: var(--bg-subtle); border-radius: 10px;
+    display: flex; align-items: center; gap: 8px;
+    color: var(--ink-3); font-size: 14px; box-sizing: border-box;
+    cursor: pointer; transition: background-color 0.12s ease;
+  }
+  .search-pill:active { background: var(--bg-hover); }
+  .search-pill input {
+    flex: 1; min-width: 0; border: none; outline: none; background: transparent;
+    font-size: 14px; color: var(--ink-1); line-height: 1.4; padding: 0;
+  }
+  .search-pill input::placeholder { color: var(--ink-3); }
+  .search-clear-btn {
+    width: 20px; height: 20px; border-radius: 50%; border: none;
+    background: rgba(0,0,0,0.16); color: #FFF; font-size: 12px;
+    display: inline-flex; align-items: center; justify-content: center;
+    cursor: pointer; flex-shrink: 0; padding: 0; line-height: 1;
+  }
+  .search-cancel-link { font-size: 15px; color: var(--link); text-decoration: none; flex-shrink: 0; padding: 4px 2px; }
+
+  /* Unified Chip Vocabulary (Consistent across Search, Quotes Series, and Detail Spec/Warranty!) */
+  .chip {
+    display: inline-flex; align-items: center; justify-content: center; gap: 3px;
+    min-height: 32px; padding: 5px 12px; border-radius: var(--r-chip);
+    border: 1px solid transparent; background: var(--bg-subtle);
+    color: var(--ink-1); font-size: 13.5px; font-weight: 500; line-height: 1.25;
+    cursor: pointer; flex-shrink: 0; box-sizing: border-box;
+    transition: background-color 0.12s ease, border-color 0.12s ease, color 0.12s ease;
+  }
+  .chip:active { background: var(--bg-hover); }
+  .chip.is-selected, .chip.active {
+    color: var(--brand); background: var(--brand-tint);
+    border-color: var(--brand-border); font-weight: 600;
+  }
+  .chip-sm { min-height: 28px; padding: 4px 10px; font-size: 12.5px; border-radius: 6px; }
+
+  /* Distinct Series Dropdown Trigger (Unmistakable select affordance vs flat quick chips) */
+  .series-dropdown-btn {
+    display: inline-flex; align-items: center; gap: 5px;
+    min-height: 28px; padding: 0 7px 0 9px; border-radius: 6px;
+    border: 1px solid rgba(0, 0, 0, 0.14); background: var(--bg-surface);
+    color: var(--ink-1); font-size: 12.5px; font-weight: 500; line-height: 1;
+    cursor: pointer; flex-shrink: 0; box-sizing: border-box;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    transition: background-color 0.12s ease, border-color 0.12s ease, color 0.12s ease;
+  }
+  .series-dropdown-btn:active { background: var(--bg-subtle); }
+  .series-dropdown-btn.active {
+    background: var(--brand-tint); border-color: var(--brand-border);
+    color: var(--brand); font-weight: 600; box-shadow: none;
+  }
+  .series-dd-count {
+    font-size: 11px; font-weight: 600; font-variant-numeric: tabular-nums;
+    padding: 1px 5px; border-radius: 4px;
+    background: var(--bg-subtle); color: var(--ink-2); line-height: 1.25;
+  }
+  .series-dropdown-btn.active .series-dd-count {
+    background: rgba(7, 193, 96, 0.14); color: var(--brand);
+  }
+  .series-dd-div { width: 0.5px; height: 11px; background: rgba(0, 0, 0, 0.12); flex-shrink: 0; }
+  .series-dropdown-btn.active .series-dd-div { background: rgba(7, 193, 96, 0.28); }
+  .series-dd-ico {
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--ink-2); flex-shrink: 0;
+  }
+  .series-dropdown-btn.active .series-dd-ico { color: var(--brand); }
+
+  /* Brand Logos (Soft squircle tiles, borderless modern feel) */
+  .brand-logo-wrap {
+    width: 40px; height: 40px; margin: 0 auto 6px;
+    border-radius: 11px; background: var(--bg-canvas);
+    display: flex; align-items: center; justify-content: center; overflow: hidden;
+  }
+  .brand-logo-img { width: 22px; height: 22px; object-fit: contain; display: block; }
+  .brand-logo-sm { width: 20px; height: 20px; object-fit: contain; display: block; flex-shrink: 0; }
+  .brand-logo-fallback {
+    width: 20px; height: 20px; border-radius: 5px; background: var(--bg-subtle);
+    color: var(--ink-1); font-size: 11px; font-weight: 700;
+    display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+
+  /* Home: Upstream Inviter Contact Strip (Shown ONLY to direct 1-level invitees when inviter set & enabled it) */
+  .inviter-contact-card {
+    margin: 10px 12px 0; padding: 10px 14px;
+    background: var(--bg-surface); border-radius: var(--r-card);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .inviter-phone-ico {
+    width: 32px; height: 32px; border-radius: 9px; flex-shrink: 0;
+    background: var(--brand-tint); color: var(--brand);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .inviter-contact-body { flex: 1; min-width: 0; cursor: pointer; }
+  .inviter-contact-label { font-size: 11.5px; color: var(--ink-2); line-height: 1.3; }
+  .inviter-contact-num {
+    font-size: 14.5px; font-weight: 600; color: var(--ink-1);
+    font-variant-numeric: tabular-nums; line-height: 1.35; margin-top: 1px;
+    display: inline-flex; align-items: center; gap: 5px;
+  }
+  .inviter-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+  .inviter-qr-btn {
+    flex-shrink: 0; height: 30px; padding: 0 10px; border-radius: 7px; border: none;
+    background: var(--bg-subtle); color: var(--ink-1);
+    font-size: 12.5px; font-weight: 500; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 4px;
+    transition: background-color 0.12s ease;
+  }
+  .inviter-qr-btn:active { background: var(--bg-hover); }
+  .inviter-call-btn {
+    flex-shrink: 0; height: 30px; padding: 0 11px; border-radius: 7px; border: none;
+    background: var(--brand-tint); color: var(--brand);
+    font-size: 12.5px; font-weight: 600; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: background-color 0.12s ease;
+  }
+  .inviter-call-btn:active { background: rgba(7, 193, 96, 0.18); }
+
+  /* Contact Phone & WeChat QR Dialog Form */
+  .contact-field-label { font-size: 12.5px; font-weight: 600; color: var(--ink-1); margin: 12px 0 6px; }
+  .contact-field-label:first-child { margin-top: 0; }
+  .contact-input {
+    width: 100%; height: 42px; padding: 0 12px; box-sizing: border-box;
+    border-radius: 9px; border: 1px solid var(--hairline-strong);
+    background: var(--bg-canvas); color: var(--ink-1);
+    font-size: 15.5px; font-variant-numeric: tabular-nums; outline: none;
+  }
+  .contact-input:focus { border-color: var(--brand); background: var(--bg-surface); }
+  .contact-qr-box {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 12px; border-radius: 9px; background: var(--bg-canvas);
+  }
+  .contact-qr-thumb {
+    width: 56px; height: 56px; border-radius: 8px; flex-shrink: 0;
+    background: var(--bg-surface); border: 0.5px solid var(--hairline-strong);
+    display: flex; align-items: center; justify-content: center; overflow: hidden;
+  }
+  .contact-qr-upload {
+    width: 56px; height: 56px; border-radius: 8px; flex-shrink: 0;
+    border: 1px dashed rgba(0, 0, 0, 0.22); background: var(--bg-surface);
+    color: var(--ink-2); font-size: 22px; font-weight: 300;
+    display: flex; align-items: center; justify-content: center; cursor: pointer;
+  }
+  .contact-switch-row {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    margin-top: 12px; padding: 10px 12px; border-radius: 9px; background: var(--bg-canvas);
+    font-size: 13.5px; color: var(--ink-1); cursor: pointer;
+  }
+  .contact-switch-row input { width: 18px; height: 18px; accent-color: var(--brand); cursor: pointer; }
+
+  /* Home: Clean Side-by-Side Category Tiles + Borderless 3x3 Brand Grid */
+  .home-cat-row {
+    margin: 10px 12px 0;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+  }
+  .home-cat-tile {
+    background: var(--bg-surface); border-radius: var(--r-card);
+    padding: 13px 14px; text-decoration: none; display: flex; flex-direction: column; gap: 8px;
+    border: 1px solid transparent; transition: background-color 0.12s ease, border-color 0.12s ease;
+  }
+  .home-cat-tile:active { background: var(--bg-subtle); }
+  .home-cat-tile.is-active { border-color: var(--brand-border); background: linear-gradient(180deg, rgba(7,193,96,0.05) 0%, #FFFFFF 100%); }
+  .home-cat-top { display: flex; align-items: center; justify-content: space-between; }
+  .home-cat-icon {
+    width: 34px; height: 34px; border-radius: 9px; background: var(--bg-subtle);
+    color: var(--ink-1); display: flex; align-items: center; justify-content: center;
+  }
+  .home-cat-tile.is-active .home-cat-icon { background: var(--brand-tint); color: var(--brand); }
+  .home-cat-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--brand); }
+  .home-cat-name { font-size: 15px; font-weight: 600; color: var(--ink-1); line-height: 1.3; }
+  .home-cat-desc { font-size: 12px; color: var(--ink-2); line-height: 1.35; margin-top: 2px; }
+
+  /* Segmented inline switcher (Home Brand Header) */
+  .seg-pill {
+    display: inline-flex; align-items: center; padding: 2px;
+    background: var(--bg-subtle); border-radius: 7px; gap: 2px;
+  }
+  .seg-pill-btn {
+    border: none; background: transparent; color: var(--ink-2);
+    font-size: 12px; font-weight: 500; padding: 3px 9px; border-radius: 5px;
+    cursor: pointer; transition: all 0.12s ease; line-height: 1.3;
+  }
+  .seg-pill-btn.active { background: var(--bg-surface); color: var(--ink-1); font-weight: 600; box-shadow: 0 1px 2px rgba(0,0,0,0.06); }
+
+  /* Borderless 3-col Brand Grid */
+  .brand-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    padding: 4px 8px 12px; gap: 4px;
+  }
+  .brand-grid-item {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 10px 4px; border-radius: 10px; text-decoration: none;
+    transition: background-color 0.12s ease;
+  }
+  .brand-grid-item:active { background: var(--bg-subtle); }
+  .brand-grid-name { font-size: 13px; color: var(--ink-1); font-weight: 500; line-height: 1.3; }
+
+  /* Quotes Flat Catalog (Clean split rail, zero box-in-box search clutter) */
+  .quotes-root { display: flex; flex-direction: column; height: 100%; background: var(--bg-surface); }
+  .quotes-tabs {
+    display: flex; align-items: center; background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--hairline); flex-shrink: 0; padding: 0 8px;
+  }
+  .quotes-tab {
+    flex: 1; text-align: center; padding: 11px 8px; font-size: 15px; font-weight: 500;
+    color: var(--ink-2); cursor: pointer; position: relative; transition: color 0.12s ease;
+  }
+  .quotes-tab.active { color: var(--ink-1); font-weight: 600; }
+  .quotes-tab.active::after {
+    content: ""; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+    width: 24px; height: 2.5px; border-radius: 99px; background: var(--brand);
+  }
+  .quotes-meta-strip {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 5px 14px; background: var(--bg-canvas); border-bottom: 0.5px solid var(--hairline);
+    font-size: 11.5px; color: var(--ink-3); flex-shrink: 0; font-variant-numeric: tabular-nums;
+  }
+  .quotes-split { display: flex; flex: 1; min-height: 0; }
+  .brand-rail {
+    width: 92px; background: var(--bg-canvas);
+    overflow-y: auto; flex-shrink: 0; padding: 4px 0;
+  }
+  .brand-rail-item {
+    width: 100%; min-height: 46px; padding: 10px 8px 10px 10px;
+    border: none; background: transparent; box-sizing: border-box;
+    font-size: 13.5px; color: var(--ink-2); cursor: pointer;
+    position: relative; display: flex; align-items: center; gap: 7px; text-align: left;
+    transition: background-color 0.12s ease, color 0.12s ease;
+  }
+  .brand-rail-item.active { background: var(--bg-surface); color: var(--ink-1); font-weight: 600; }
+  .brand-rail-item.active::before {
+    content: ""; position: absolute; left: 0; top: 13px; bottom: 13px;
+    width: 3px; background: var(--brand); border-radius: 0 3px 3px 0;
+  }
+  .quotes-right { flex: 1; background: var(--bg-surface); overflow-y: auto; display: flex; flex-direction: column; min-width: 0; }
+  .quotes-right-sticky { position: sticky; top: 0; z-index: 8; background: var(--bg-surface); border-bottom: 0.5px solid var(--hairline); }
+  .quotes-inbrand-bar { padding: 8px 12px; }
+  .series-bar-inline {
+    display: flex; align-items: center; flex-wrap: wrap; gap: 6px;
+    padding: 0 12px 9px; background: var(--bg-surface);
+  }
+  .h-scroll-bar {
+    display: flex; align-items: center; gap: 6px; overflow-x: auto;
+    padding: 8px 12px; background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--hairline);
+  }
+  .h-scroll-bar::-webkit-scrollbar { display: none; }
+
+  /* Detail Page: Single-Screen Precision Layout */
+  .detail-wrap { min-height: 100%; display: flex; flex-direction: column; }
+  .detail-main { flex: 1; padding-bottom: 6px; }
+  .detail-head { padding: 13px 14px 11px; }
+  .detail-title-row { display: flex; align-items: center; gap: 8px; }
+  .detail-title-txt {
+    font-size: var(--fs-h1); font-weight: 700; color: var(--ink-1); line-height: 1.3;
+    letter-spacing: -0.015em; flex: 1; min-width: 0; cursor: pointer;
+    display: flex; align-items: center; gap: 5px;
+  }
+  .detail-copy-ico { color: var(--ink-3); flex-shrink: 0; display: inline-flex; }
+  .detail-cat-pill {
+    flex-shrink: 0; padding: 2px 7px; border-radius: 5px;
+    font-size: 11.5px; font-weight: 500;
+    background: var(--bg-subtle); color: var(--ink-2);
+  }
+  .detail-meta-row {
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    margin-top: 5px; font-size: 12px; color: var(--ink-2); line-height: 1.35;
+  }
+  .detail-meta-left { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .detail-meta-time { flex-shrink: 0; font-size: 11.5px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+
+  /* Compact Inline Spec & Warranty Selectors */
+  .spec-section { padding: 10px 14px 12px; border-top: 0.5px solid var(--hairline); }
+  .spec-row { display: flex; align-items: flex-start; gap: 10px; }
+  .spec-row + .spec-row { margin-top: 8px; }
+  .spec-row-label {
+    flex-shrink: 0; width: 30px; padding-top: 7px;
+    font-size: 12.5px; font-weight: 500; color: var(--ink-2); line-height: 1.3;
+  }
+  .spec-wrap { display: flex; flex-wrap: wrap; gap: 6px; flex: 1; min-width: 0; }
+
+  /* Compact Single-Line Price Card */
+  .detail-quote-hd {
+    padding: 10px 14px;
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    border-bottom: 0.5px solid var(--hairline);
+  }
+  .detail-quote-title { font-size: 13px; font-weight: 600; color: var(--ink-1); }
+  .detail-quote-hint { font-size: 11.5px; font-weight: 400; color: var(--ink-3); margin-left: 6px; }
+  .detail-quote-links { display: flex; align-items: center; gap: 9px; font-size: 12.5px; flex-shrink: 0; }
+  .detail-quote-links a { color: var(--link); text-decoration: none; }
+  .detail-quote-links a:active { opacity: 0.6; }
+  .detail-quote-div { width: 0.5px; height: 10px; background: var(--hairline-strong); }
+  .detail-price-cell { padding: 10px 14px !important; min-height: 44px; box-sizing: border-box; cursor: pointer; }
+  .detail-price-cell .weui-cell__ft { padding-right: 0; }
+  .detail-price-cell .weui-cell__ft::after { display: none !important; content: none !important; }
+  .detail-cond-name { font-size: var(--fs-body); font-weight: 500; color: var(--ink-1); line-height: 1.35; }
+
+  /* Prominent Remark Callout (Warm amber full-bordered tint, high outdoor scannability, zero one-sided bar) */
+  .detail-remark-box {
+    margin: 8px 12px 0; padding: 10px 12px;
+    border-radius: 10px; background: #FFF8E6;
+    border: 1px solid rgba(217, 119, 6, 0.26);
+    font-size: 14px; font-weight: 500; color: #5C3400; line-height: 1.5;
+    display: flex; align-items: flex-start; gap: 8px;
+  }
+  .detail-remark-tag {
+    flex-shrink: 0; padding: 2px 7px; border-radius: 5px;
+    background: rgba(217, 119, 6, 0.15); color: #9A4D00;
+    font-size: 12px; font-weight: 700; line-height: 1.3; margin-top: 1px;
+  }
+  .detail-footer-compact { padding: 10px 16px 6px; text-align: center; }
+  .detail-footer-links {
+    display: flex; align-items: center; justify-content: center; gap: 12px;
+    font-size: 12.5px; margin-bottom: 4px;
+  }
+  .detail-footer-links a { color: var(--link); text-decoration: none; }
+  .detail-footer-note { font-size: 11.5px; color: var(--ink-3); line-height: 1.4; margin: 0; }
+
+  /* Precision Price Typography & Status Tags */
+  .price-val {
+    font-variant-numeric: tabular-nums; font-size: var(--fs-price); font-weight: 700;
+    color: var(--price-red); line-height: 1.15; letter-spacing: -0.02em;
+    display: inline-flex; align-items: baseline;
+  }
+  .price-yen { font-size: 13px; font-weight: 600; margin-right: 1px; }
+  .state-tag {
+    display: inline-flex; align-items: center; padding: 3px 8px; border-radius: 5px;
+    font-size: 12.5px; font-weight: 500;
+  }
+  .state-tag_muted { background: var(--bg-subtle); color: var(--ink-2); }
+  .state-tag_paused { background: #F3F4F6; color: rgba(0,0,0,0.62); }
+  .state-tag_expired { background: #FFF8E6; color: #92400E; }
+  .state-tag_inquiry { background: rgba(87,107,149,0.1); color: var(--link); font-weight: 600; }
+
+  .offline-strip {
+    background: #FFF9E6; color: #92400E;
+    padding: 8px 14px; font-size: 12.5px; line-height: 1.4;
+    border-bottom: 0.5px solid rgba(217, 119, 6, 0.18);
+  }
+  .detail-opr-bar {
+    position: sticky; bottom: 0; z-index: 20; background: rgba(255,255,255,0.96);
+    border-top: 0.5px solid var(--hairline);
+    padding: 8px 12px max(14px, env(safe-area-inset-bottom));
+    display: flex; gap: 10px;
+  }
+  .ui-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-height: 44px; padding: 10px 14px; border-radius: var(--r-btn);
+    font-size: 15px; font-weight: 600; line-height: 1.3; text-decoration: none;
+    border: none; cursor: pointer; box-sizing: border-box;
+    transition: opacity 0.12s ease, background-color 0.12s ease;
+  }
+  .ui-btn:active { opacity: 0.82; }
+  .ui-btn-primary { background: var(--brand); color: #FFFFFF; }
+  .ui-btn-secondary { background: var(--bg-subtle); color: var(--ink-1); }
+  .ui-btn-block { width: 100%; }
+  .detail-opr-bar .ui-btn { flex: 1; min-width: 0; }
+
+  /* Clean List Typography */
+  .compact-cell { padding: 11px 14px !important; min-height: 46px; box-sizing: border-box; }
+  .model-name-txt { font-size: var(--fs-body); font-weight: 500; color: var(--ink-1); line-height: 1.38; margin: 0; }
+  .model-meta-txt { font-size: 12.5px; color: var(--ink-2); margin: 2px 0 0; line-height: 1.35; }
+  .row-time-txt { font-size: 11.5px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+
+  /* Mine Profile Card */
+  .mine-profile { padding: 16px 14px; display: flex; align-items: center; gap: 12px; }
+  .mine-avatar {
+    width: 52px; height: 52px; border-radius: 14px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; font-weight: 700;
+  }
+  .mine-code-pill {
+    display: inline-flex; align-items: center; gap: 5px; margin-top: 5px;
+    padding: 2px 8px; border-radius: 5px; background: var(--bg-subtle);
+    font-size: 12.5px; color: var(--ink-2); font-variant-numeric: tabular-nums; cursor: pointer;
+  }
+  .mine-code-pill strong { color: var(--ink-1); font-weight: 600; letter-spacing: 0.03em; }
+
+  /* Console Panel (hidden by default for clean sharing; append ?debug=1 to reveal) */
+  body:not(.show-debug) .console-panel,
+  body:not(.show-debug) .stage-caption { display: none; }
+  .console-panel {
+    width: 420px; max-width: 100%; background: #1F2937;
+    border: 1px solid rgba(255,255,255,0.09); border-radius: 18px;
+    padding: 18px 20px; display: flex; flex-direction: column; gap: 14px;
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+  }
+  .console-title { font-size: 16px; font-weight: 700; color: #F9FAFB; display: flex; justify-content: space-between; align-items: center; }
+  .console-sec { background: rgba(17,24,39,0.6); border: 1px solid rgba(255,255,255,0.07); border-radius: 12px; padding: 12px; }
+  .console-sec h4 { margin: 0 0 8px; font-size: 12px; color: #9CA3AF; font-weight: 600; }
+  .ctrl-grid { display: flex; flex-wrap: wrap; gap: 6px; }
+  .ctrl-btn {
+    padding: 7px 10px; border-radius: 6px; border: 1px solid rgba(156,163,175,0.28);
+    background: rgba(31,41,55,0.9); color: #E5E7EB; font-size: 12.5px; cursor: pointer;
+  }
+  .ctrl-btn:hover { border-color: #60A5FA; }
+  .ctrl-btn.active { background: #07C160; border-color: #07C160; color: #FFF; font-weight: 600; }
+  .ctrl-btn.danger { border-color: rgba(248,113,113,0.45); color: #FCA5A5; }
+  .state-pre { margin: 0; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11.5px; line-height: 1.5; color: #CBD5E1; white-space: pre-wrap; }
+
+  /* Accessibility & Large-Font Adaptations */
+  .phone-screen button, .phone-screen input, .phone-screen textarea { font-family: inherit; }
+  .phone-screen :focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
+  .phone-screen .weui-cell__bd { min-width: 0; overflow-wrap: anywhere; }
+  .phone-screen .weui-cell__ft { flex-shrink: 0; max-width: 48%; overflow-wrap: anywhere; }
+  .phone-screen.large-font .model-name-txt, .phone-screen.large-font .weui-cell__bd > p, .phone-screen.large-font .detail-cond-name { font-size: 17.5px !important; }
+  .phone-screen.large-font .model-meta-txt, .phone-screen.large-font .chip, .phone-screen.large-font .ui-btn { font-size: 15.5px !important; }
+  .phone-screen.large-font .detail-title-txt { font-size: 20px !important; }
+  .phone-screen.large-font .spec-row-label { width: 38px; font-size: 14.5px; }
+  .phone-screen.large-font .brand-rail { width: 102px; }
+  .phone-screen.large-font .brand-rail-item { font-size: 15.5px; }
+  .phone-screen .weui-half-screen-dialog { box-sizing: border-box; padding-bottom: env(safe-area-inset-bottom); border-radius: 16px 16px 0 0; }
+  .phone-screen .weui-half-screen-dialog__title { font-size: 16px; font-weight: 600; }
+  .phone-screen .weui-half-screen-dialog__bd { overflow-wrap: anywhere; }
+  @media (max-width:600px) {
+    html, body { background: var(--bg-canvas); }
+    .workspace { display: block; padding: 0; }
+    .phone-stage { display: block; }
+    .phone-shell { width: 100%; height: 100dvh; padding: 0; background: none; border-radius: 0; box-shadow: none; }
+    .phone-screen { width: 100%; height: 100dvh; border-radius: 0; }
+    .stage-caption, .console-panel { display: none; }
+  }
+  @media (prefers-reduced-motion:reduce) { .phone-shell, .phone-screen, .chip, .ui-btn { transition: none; } }
+</style>
+</head>
+<body>
+<div class="workspace">
+  <!-- Left: Official WeUI v2.6.16 Screen -->
+  <div class="phone-stage">
+    <div class="stage-caption">
+      <span class="stage-badge">WeUI · 现场查价原型</span>
+      <span>简称快查 · 规格确认 · 单档展示</span>
+    </div>
+    <div class="phone-shell">
+      <div class="phone-screen wx-root" data-weui-theme="light" id="phoneScreen">
+        <div class="wx-nav-wrap" id="wxNavWrap">
+          <div class="wx-statusbar">
+            <span>17:35</span>
+            <span>5G ▮▮▮ 96%</span>
+          </div>
+          <div class="wx-navbar">
+            <div class="wx-nav-left" id="wxNavLeft"></div>
+            <div class="wx-nav-title" id="wxNavTitle">手机回收报价</div>
+            <div class="wx-capsule" onclick="showToptips('微信原生右上角胶囊菜单', 'info')">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2.6"/><circle cx="19" cy="12" r="2"/></svg>
+              <span class="wx-capsule-div"></span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="7.5" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="3" fill="currentColor"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="weui-toptips" id="toptips" role="status" aria-live="polite"></div>
+        <div class="page-body" id="pageBody"></div>
+
+        <div class="wx-tabbar-shell" id="wxTabbarShell">
+          <div class="weui-tabbar" id="wxTabbar"></div>
+        </div>
+
+        <!-- Official WeUI ActionSheet -->
+        <div id="actionSheetWrap" style="display:none;">
+          <div class="weui-mask" onclick="closeActionSheet()"></div>
+          <div class="weui-actionsheet weui-actionsheet_toggle">
+            <div class="weui-actionsheet__title"><p class="weui-actionsheet__title-text" id="actionTitle"></p></div>
+            <div class="weui-actionsheet__menu" id="actionMenu"></div>
+            <div class="weui-actionsheet__action"><div class="weui-actionsheet__cell" onclick="closeActionSheet()">取消</div></div>
+          </div>
+        </div>
+
+        <!-- Official WeUI Half-Screen Dialog (Reactive for Customer Focus Card!) -->
+        <div id="halfDialogWrap" style="display:none;">
+          <div class="weui-mask" onclick="closeHalfDialog()"></div>
+          <div class="weui-half-screen-dialog" role="dialog" aria-modal="true" aria-labelledby="halfTitle" style="max-height:82%;display:flex;flex-direction:column;">
+            <div class="weui-half-screen-dialog__hd">
+              <div class="weui-half-screen-dialog__hd__side">
+                <button class="weui-icon-btn weui-icon-btn_close" onclick="closeHalfDialog()">关闭</button>
+              </div>
+              <div class="weui-half-screen-dialog__hd__main">
+                <strong class="weui-half-screen-dialog__title" id="halfTitle"></strong>
+              </div>
+            </div>
+            <div class="weui-half-screen-dialog__bd" id="halfBody" style="overflow-y:auto;padding-bottom:28px;"></div>
+          </div>
+        </div>
+
+        <!-- Official WeUI Dialog -->
+        <div id="dialogWrap" style="display:none;">
+          <div class="weui-mask" onclick="closeDialog()"></div>
+          <div class="weui-dialog" role="dialog" aria-modal="true" aria-labelledby="dialogTitle">
+            <div class="weui-dialog__hd"><strong class="weui-dialog__title" id="dialogTitle"></strong></div>
+            <div class="weui-dialog__bd" id="dialogBody"></div>
+            <div class="weui-dialog__ft" id="dialogActions"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right: Reviewer Console -->
+  <div class="console-panel">
+    <div class="console-title">
+      <span>交互预览</span>
+      <span style="font-size:12px;color:#9CA3AF;font-weight:400;" id="datasetSummary"></span>
+    </div>
+
+    <p style="font-size:13px;color:#CBD5E1;line-height:1.6;margin:0;">HTML 交互原型，使用官方 WeUI 样式。登录、权限、调价均为演示；小程序开发时使用原生导航和官方扩展组件。</p>
+    <div class="console-sec">
+      <h4>1. 后台用户价目表权限（点轻灰 ⇄ 44×44 热区切换）</h4>
+      <div class="ctrl-grid" id="permControls"></div>
+    </div>
+
+    <div class="console-sec">
+      <h4>2. 查价流程与规格确认</h4>
+      <div class="ctrl-grid">
+        <button class="ctrl-btn" onclick="openAppleSpecDemo()">苹果靓机：容量+保修显式确认</button>
+        <button class="ctrl-btn" onclick="openPausedDemo()">暂停回收示例 (iPhone 6s)</button>
+        <button class="ctrl-btn" onclick="jumpBrandTest(1, '华为')">华为 · 环保机（多系列扁平）</button>
+        <button class="ctrl-btn" onclick="jumpBrandTest(0, 'VIVO')">VIVO · 靓机（多容量换行）</button>
+      </div>
+    </div>
+
+    <div class="console-sec">
+      <h4>3. 客户展示卡实时联动测试（开着展示卡直接点下方按钮！）</h4>
+      <div class="ctrl-grid">
+        <button class="ctrl-btn" id="btnOffline" onclick="toggleOffline()">断网：历史报价</button>
+        <button class="ctrl-btn" id="btnExpired" onclick="toggleExpired()">模拟报价已过期</button>
+        <button class="ctrl-btn" onclick="simulateLivePriceUpdate()">后台调价 (+100)</button>
+        <button class="ctrl-btn danger" onclick="simulateRevokeStallBook()">撤回「摆摊收机价」</button>
+        <button class="ctrl-btn" onclick="simulateReferralRegister()">扫码一级推荐</button>
+        <button class="ctrl-btn active" id="btnW375" onclick="setViewport(375)">375px</button>
+        <button class="ctrl-btn" id="btnW320" onclick="setViewport(320)">320px</button>
+        <button class="ctrl-btn" id="btnLargeFont" onclick="toggleLargeFont()">大字号</button>
+      </div>
+    </div>
+
+    <div class="console-sec">
+      <h4>4. 快捷跳转 7 页</h4>
+      <div class="ctrl-grid" id="pageJumpControls"></div>
+    </div>
+
+    <div class="console-sec">
+      <h4>5. 当前状态摘要</h4>
+      <pre class="state-pre" id="stateInspector"></pre>
+    </div>
+  </div>
+</div>
+
+<script src="data.js"></script>
+<script>
+const RAW = window.PROTOTYPE_DATA;
+const MODELS_BY_ID = new Map();
+RAW.models.forEach(m => MODELS_BY_ID.set(m[0], m));
+
+function getBrandObj(bIdx) { return RAW.brands[bIdx] || { name: '其他', logo: '' }; }
+function getBrandIdxByName(name) { return RAW.brands.findIndex(b => b.name === name); }
+function getModel(id) { return MODELS_BY_ID.get(id) || RAW.models[0]; }
+function esc(s) {
+  return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+function renderBrandLogo(brandObj, size = 'grid') {
+  if (brandObj.logo) {
+    if (size === 'sm') return `<img class="brand-logo-sm" src="${brandObj.logo}" alt="${esc(brandObj.name)}" loading="lazy" />`;
+    return `<div class="brand-logo-wrap"><img class="brand-logo-img" src="${brandObj.logo}" alt="${esc(brandObj.name)}" loading="lazy" /></div>`;
+  }
+  if (size === 'sm') return `<span class="brand-logo-fallback">${esc(brandObj.name[0])}</span>`;
+  return `<div class="brand-logo-wrap"><span style="font-size:13px;font-weight:700;color:var(--weui-FG-0);">${esc(brandObj.name.slice(0,2))}</span></div>`;
+}
+
+/* Parse a model's SKUs into explicit dimensions: capacity + optional warranty (在保/无保) */
+function parseModelDimensions(m) {
+  const skus = m[7];
+  if (!skus.length || (skus.length === 1 && !skus[0][0])) {
+    return { hasSpec: false, caps: [], warranties: [], skuMap: new Map([['', skus[0]]]) };
+  }
+  const caps = [];
+  const warranties = [];
+  const skuMap = new Map();
+  for (const sku of skus) {
+    const raw = sku[0];
+    const parts = raw.split(' · ').map(x => x.trim()).filter(Boolean);
+    let cap = raw, war = '';
+    if (parts.length === 2 && (parts[1] === '在保' || parts[1] === '无保')) {
+      cap = parts[0];
+      war = parts[1];
+    } else if (raw === '在保' || raw === '无保') {
+      cap = '';
+      war = raw;
+    }
+    if (cap && !caps.includes(cap)) caps.push(cap);
+    if (war && !warranties.includes(war)) warranties.push(war);
+    skuMap.set(`${cap}||${war}`, sku);
+  }
+  return { hasSpec: true, caps, warranties, skuMap };
+}
+
+const SVG = {
+  back: `<svg width="11" height="19" viewBox="0 0 12 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2L2 10l8 8"/></svg>`,
+  chevronDown: `<svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.75 6L8 10.25L12.25 6"/></svg>`,
+  search: `<svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="9" cy="9" r="6"/><path d="M13.5 13.5L17.5 17.5"/></svg>`,
+  copy: `<svg width="13" height="13" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="7" width="10" height="10" rx="2"/><path d="M4.5 13H4a1.5 1.5 0 0 1-1.5-1.5V4A1.5 1.5 0 0 1 4 2.5h7.5A1.5 1.5 0 0 1 13 4v.5"/></svg>`,
+  phone: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>`,
+  qr: `<svg width="13" height="13" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="2.5" width="5.5" height="5.5" rx="1"/><rect x="12" y="2.5" width="5.5" height="5.5" rx="1"/><rect x="2.5" y="12" width="5.5" height="5.5" rx="1"/><path d="M12 12h2.5v2.5H12zM16.5 12v5.5M12 17.5h2.5"/></svg>`,
+  ecoPhone: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M9.5 11.5l1.8 1.8 3.5-3.8"/><path d="M10.5 18h3"/></svg>`,
+  mintPhone: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M12 7.5l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8.8-2.2z"/><path d="M10.5 18h3"/></svg>`,
+  tabHome: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5L12 4l8 6.5V19a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 19v-8.5z"/><path d="M9.5 20.5V14h5v6.5"/></svg>`,
+  tabQuotes: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="3.5" width="15" height="17" rx="2.5"/><path d="M8.5 8.5h7M8.5 12.5h7M8.5 16.5h4.5"/></svg>`,
+  tabMine: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 19.5c1.5-3.2 4-4.5 7-4.5s5.5 1.3 7 4.5"/></svg>`,
+};
+
+const inviterDirectory = {
+  LC2018: { nickname: '老陈二手', contactName: '老陈二手', canManageContact: true, phone: '13800138888', wechatQr: 'demo_qr_lc', visible: true },
+  AQ8829: { nickname: '阿强收机摊', contactName: '阿强收机摊', canManageContact: true, phone: '13922886699', wechatQr: 'demo_qr_aq', visible: true },
+  T8K92M: { nickname: '同行推荐人', contactName: '同行收机', canManageContact: true, phone: '13611223344', wechatQr: 'demo_qr_t8', visible: true },
+};
+
+const PERM_PRESETS = {
+  authorized_stall: {
+    label: '授权摊主（特殊用户·3套价）',
+    user: {
+      loggedIn: true, nickname: '阿强收机摊', inviteCode: 'AQ8829', invitedBy: '老陈二手(LC2018)', invitedByCode: 'LC2018',
+      canManageContact: true, contactName: '阿强收机摊', contactPhone: '13922886699', contactWechatQr: 'demo_qr_aq', showContactToInvitees: true,
+      allowPublicBooks: true, grantedBookIds: ['stall_buy', 'vip_buy'], preferredBookId: 'channel',
+      referrals: [
+        { nickname: '小*华', createdAt: '2026-11-24 18:22' },
+        { nickname: '深*龙哥', createdAt: '2026-11-23 11:05' },
+        { nickname: '城*回收', createdAt: '2026-11-21 15:40' },
+      ],
+    },
+  },
+  ordinary_vendor: {
+    label: '普通摊主（非特殊用户）',
+    user: {
+      loggedIn: true, nickname: '新摊主小周', inviteCode: 'XZ5512', invitedBy: '阿强收机摊(AQ8829)', invitedByCode: 'AQ8829',
+      canManageContact: false, contactName: '', contactPhone: '', contactWechatQr: '', showContactToInvitees: false,
+      allowPublicBooks: true, grantedBookIds: [], preferredBookId: 'channel', referrals: [],
+    },
+  },
+  exclusive_book: {
+    label: '合作档口（特殊用户·1套价）',
+    user: {
+      loggedIn: true, nickname: '合作档口A', inviteCode: 'DK6610', invitedBy: '', invitedByCode: '',
+      canManageContact: true, contactName: '合作档口A', contactPhone: '', contactWechatQr: '', showContactToInvitees: true,
+      allowPublicBooks: false, grantedBookIds: ['stall_buy'], preferredBookId: 'stall_buy',
+      referrals: [{ nickname: '李*手机', createdAt: '2026-11-25 09:12' }],
+    },
+  },
+};
+
+function renderQrArtwork(size = 148) {
+  return `
+    <svg width="${size}" height="${size}" viewBox="0 0 96 96" aria-hidden="true">
+      <rect width="96" height="96" fill="#FFFFFF"/>
+      <rect x="8" y="8" width="24" height="24" rx="2.5" stroke="#111" stroke-width="5" fill="none"/><rect x="15" y="15" width="10" height="10" rx="1" fill="#111"/>
+      <rect x="64" y="8" width="24" height="24" rx="2.5" stroke="#111" stroke-width="5" fill="none"/><rect x="71" y="15" width="10" height="10" rx="1" fill="#111"/>
+      <rect x="8" y="64" width="24" height="24" rx="2.5" stroke="#111" stroke-width="5" fill="none"/><rect x="15" y="71" width="10" height="10" rx="1" fill="#111"/>
+      <rect x="41" y="41" width="14" height="14" rx="3" fill="#07C160"/>
+      <rect x="40" y="10" width="8" height="16" fill="#111"/><rect x="52" y="16" width="6" height="16" fill="#111"/>
+      <rect x="10" y="42" width="18" height="7" fill="#111"/><rect x="30" y="34" width="7" height="18" fill="#111"/>
+      <rect x="64" y="40" width="22" height="7" fill="#111"/><rect x="62" y="54" width="10" height="12" fill="#111"/>
+      <rect x="40" y="64" width="14" height="8" fill="#111"/><rect x="44" y="78" width="16" height="8" fill="#111"/>
+      <rect x="76" y="62" width="10" height="24" fill="#111"/><rect x="64" y="74" width="8" height="12" fill="#111"/>
+    </svg>
+  `;
+}
+
+function fmtPhoneDisplay(p) {
+  const digits = String(p || '').replace(/\D/g, '');
+  return digits.length === 11 ? `${digits.slice(0, 3)} ${digits.slice(3, 7)} ${digits.slice(7)}` : digits;
+}
+function getVisibleInviterContact() {
+  if (!state.user.loggedIn || !state.user.invitedByCode) return null;
+  const info = inviterDirectory[state.user.invitedByCode];
+  if (!info || !info.canManageContact || !info.visible || (!info.phone && !info.wechatQr)) return null;
+  return { name: info.contactName || info.nickname, phone: info.phone || '', wechatQr: info.wechatQr || '' };
+}
+function openInviterQrDialog() {
+  const info = getVisibleInviterContact();
+  if (!info || !info.wechatQr) return;
+  openHalfDialog(`回收手机找 ${info.name}`, `
+    <div style="text-align:center;padding:8px 0 4px;">
+      <div style="width:176px;height:176px;margin:0 auto 12px;background:#FFF;border:0.5px solid var(--hairline-strong);border-radius:14px;display:flex;align-items:center;justify-content:center;">
+        ${renderQrArtwork(150)}
+      </div>
+      <div style="font-size:15px;font-weight:600;color:var(--ink-1);">微信联系 · ${esc(info.name)}</div>
+      <div style="font-size:12.5px;color:var(--ink-2);margin-top:4px;">长按保存或微信扫一扫，回收手机直接联系</div>
+      ${info.phone ? `
+        <div style="margin-top:14px;padding:10px 12px;border-radius:10px;background:var(--bg-canvas);display:flex;align-items:center;justify-content:space-between;gap:8px;">
+          <span style="font-size:13.5px;color:var(--ink-1);font-variant-numeric:tabular-nums;">电话：${esc(fmtPhoneDisplay(info.phone))}</span>
+          <a href="javascript:;" style="font-size:13px;color:var(--link);text-decoration:none;font-weight:500;" onclick="copyText('${esc(info.phone)}','手机号已复制')">复制</a>
+        </div>
+      ` : ''}
+    </div>
+  `);
+}
+
+let draftContactQr = '';
+function saveMyContactSettings(rawPhone, wechatQr, visible = true, rawName) {
+  if (!state.user.loggedIn || !state.user.canManageContact) {
+    showToptips('当前账号无此设置权限', 'warn');
+    return false;
+  }
+  const digits = String(rawPhone || '').replace(/\D/g, '');
+  if (digits && !/^1\d{10}$/.test(digits)) {
+    showToptips('请输入正确的 11 位联系手机号', 'warn');
+    return false;
+  }
+  const qrVal = String(wechatQr || '').trim();
+  const displayName = rawName !== undefined
+    ? (String(rawName || '').trim() || state.user.nickname)
+    : (state.user.contactName || state.user.nickname);
+  state.user.contactName = displayName;
+  state.user.contactPhone = digits;
+  state.user.contactWechatQr = qrVal;
+  state.user.showContactToInvitees = !!visible;
+  if (PERM_PRESETS[state.presetKey]) {
+    PERM_PRESETS[state.presetKey].user.contactName = displayName;
+    PERM_PRESETS[state.presetKey].user.contactPhone = digits;
+    PERM_PRESETS[state.presetKey].user.contactWechatQr = qrVal;
+    PERM_PRESETS[state.presetKey].user.showContactToInvitees = !!visible;
+  }
+  if (state.user.inviteCode) {
+    inviterDirectory[state.user.inviteCode] = {
+      nickname: state.user.nickname,
+      contactName: displayName,
+      canManageContact: !!state.user.canManageContact,
+      phone: digits,
+      wechatQr: qrVal,
+      visible: !!visible,
+    };
+  }
+  closeHalfDialog();
+  const hasAny = !!(digits || qrVal);
+  showToptips(hasAny ? (visible ? '联系方式已保存，直推下级首页可见' : '联系方式已保存（暂不对下级展示）') : '已清空联系方式', 'success');
+  render();
+  return true;
+}
+function saveMyContactPhone(rawPhone, visible = true) {
+  return saveMyContactSettings(rawPhone, state.user.contactWechatQr || '', visible);
+}
+function renderContactDialogBody(nameVal, phoneVal, qrVal, visibleVal) {
+  draftContactQr = qrVal || '';
+  return `
+    <div style="font-size:12.5px;color:var(--ink-2);line-height:1.5;margin-bottom:12px;">
+      保存后将在您直推下级（仅一级）的首页展示为「回收手机找 ${esc(nameVal || state.user.nickname)}」，方便直接联系。
+    </div>
+    <div class="contact-field-label">对外称呼（默认使用昵称）</div>
+    <input type="text" maxlength="16" id="contactNameInput" class="contact-input" placeholder="如：老陈二手 / 阿强" value="${esc(nameVal || state.user.nickname)}" />
+    <div class="contact-field-label">联系手机号（选填）</div>
+    <input type="tel" inputmode="numeric" maxlength="11" id="contactPhoneInput" class="contact-input" placeholder="请输入 11 位联系手机号" value="${esc(phoneVal || '')}" />
+    <div class="contact-field-label">微信二维码（选填）</div>
+    <div class="contact-qr-box">
+      ${draftContactQr ? `
+        <div class="contact-qr-thumb">${renderQrArtwork(48)}</div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:13.5px;font-weight:600;color:var(--ink-1);">已上传微信二维码</div>
+          <div style="font-size:12px;color:var(--ink-2);margin-top:2px;">下级首页点「微信」即可扫码添加</div>
+        </div>
+        <a href="javascript:;" style="font-size:12.5px;color:var(--price-red);text-decoration:none;padding:4px 6px;" onclick="toggleDraftContactQr('')">删除</a>
+      ` : `
+        <div class="contact-qr-upload" role="button" tabindex="0" onclick="toggleDraftContactQr('uploaded_qr')">+</div>
+        <div style="flex:1;min-width:0;cursor:pointer;" onclick="toggleDraftContactQr('uploaded_qr')">
+          <div style="font-size:13.5px;font-weight:500;color:var(--ink-1);">上传个人微信二维码</div>
+          <div style="font-size:12px;color:var(--ink-3);margin-top:2px;">支持从手机相册选择二维码截图</div>
+        </div>
+      `}
+    </div>
+    <label class="contact-switch-row">
+      <span>在直推下级首页展示</span>
+      <input type="checkbox" id="contactVisibleInput" ${visibleVal ? 'checked' : ''} />
+    </label>
+    <div style="display:flex;gap:10px;margin-top:16px;">
+      <button type="button" class="ui-btn ui-btn-secondary" style="flex:1;" onclick="saveMyContactSettings('', '', false)">清空</button>
+      <button type="button" class="ui-btn ui-btn-primary" style="flex:2;" onclick="saveMyContactSettings(document.getElementById('contactPhoneInput').value, draftContactQr, document.getElementById('contactVisibleInput').checked, document.getElementById('contactNameInput').value)">保存设置</button>
+    </div>
+  `;
+}
+function toggleDraftContactQr(nextQr) {
+  const nameEl = document.getElementById('contactNameInput');
+  const phoneEl = document.getElementById('contactPhoneInput');
+  const visEl = document.getElementById('contactVisibleInput');
+  const n = nameEl ? nameEl.value : (state.user.contactName || state.user.nickname);
+  const p = phoneEl ? phoneEl.value : (state.user.contactPhone || '');
+  const v = visEl ? visEl.checked : (state.user.showContactToInvitees !== false);
+  openHalfDialog('我的联系方式', renderContactDialogBody(n, p, nextQr, v));
+}
+function openContactSettingDialog() {
+  if (!state.user.loggedIn || !state.user.canManageContact) return;
+  const u = state.user;
+  openHalfDialog('我的联系方式', renderContactDialogBody(u.contactName || u.nickname, u.contactPhone || '', u.contactWechatQr || '', u.showContactToInvitees !== false));
+}
+
+function loadSavedCat() {
+  try {
+    const v = localStorage.getItem('recycle_last_cat');
+    if (v === '0' || v === '1') return Number(v);
+  } catch (e) {}
+  return 1; // default: 环保机回收
+}
+function saveLastCat(cat) {
+  state.lastCat = cat;
+  try { localStorage.setItem('recycle_last_cat', String(cat)); } catch (e) {}
+}
+
+const initialCat = loadSavedCat();
+const state = {
+  presetKey: 'authorized_stall',
+  user: JSON.parse(JSON.stringify(PERM_PRESETS.authorized_stall.user)),
+  page: 'index',
+  historyStack: [],
+  scrollPositions: {},
+  quotesRightScroll: 0,
+  brandRailScroll: 0,
+  offline: false,
+  expired: false,
+  priceOffset: 0,
+  pendingPriceOffset: 0,
+  viewport: 375,
+  largeFont: false,
+  pendingInviterCode: '',
+  // Remembered last category (1=环保机回收, 0=靓机回收)
+  lastCat: initialCat,
+  // Search
+  searchQuery: '',
+  searchBrandIdx: -1,
+  searchLimit: 40,
+  searchHistory: ['16 pro max', 'A3297', 'Mate 70', 'Find X8'],
+  shouldFocusSearch: false,
+  // Quotes catalog
+  quotesCat: initialCat,
+  quotesBrandIdx: 1,
+  quotesSeries: '',
+  inBrandFilter: '',
+  quotesPageSize: 35,
+  // Detail explicit confirmation state (NEVER silently assumed!)
+  detailModelId: RAW.hotModelIds[1] || RAW.models[0][0],
+  specConfirmed: false,
+  composing: false,
+  selectedCap: '',
+  selectedWarranty: '',
+  preMatchedNotice: '',
+  // Reactive customer focus card state (stays in sync on price update / offline / expired / revoke!)
+  focusCard: null, // { modelId, cap, warranty, condIdx, isInquiry }
+  // Recent
+  recent: [
+    RAW.models.find(m => m[1] === 1 && getBrandObj(m[2]).name === '华为') || RAW.models[0],
+    RAW.models.find(m => m[1] === 1 && getBrandObj(m[2]).name === 'OPPO') || RAW.models[1],
+    RAW.models.find(m => m[1] === 0 && getBrandObj(m[2]).name === '苹果') || RAW.models[2],
+  ].map((m, i) => ({
+    id: 'r' + i, modelId: m[0], cap: '', warranty: '', time: ['今天 16:40', '今天 14:15', '昨天 19:02'][i]
+  })),
+  // Feedback
+  feedbackType: 'missing_model',
+  feedbackText: '',
+  feedbackImages: [],
+  feedbackSubmitted: false,
+};
+
+function getAuthorizedBooks() {
+  return RAW.priceBooks.filter(b => {
+    if (b.visibility === 'internal') return false;
+    if (b.visibility === 'public' && state.user.allowPublicBooks) return true;
+    if (b.visibility === 'restricted' && state.user.loggedIn && state.user.grantedBookIds.includes(b.id)) return true;
+    return false;
+  });
+}
+function getActiveBook() {
+  const books = getAuthorizedBooks();
+  const found = books.find(b => b.id === state.user.preferredBookId);
+  if (found) return found;
+  const fallback = books[0] || null;
+  state.user.preferredBookId = fallback ? fallback.id : '';
+  return fallback;
+}
+function calcBookPrice(baseVal, book) {
+  if (baseVal == null || !book) return null;
+  const adj = book.factor === 1.0 ? baseVal : Math.max(10, Math.round((baseVal * book.factor) / 10) * 10);
+  return adj + state.priceOffset;
+}
+function fmtMoney(n) { return '¥' + Number(n).toLocaleString('zh-CN'); }
+function fmtPriceHtml(n) { return `<span class="price-yen">¥</span>${Number(n).toLocaleString('zh-CN')}`; }
+function hasBrandInName(modelName, brandName) {
+  return String(modelName).toLowerCase().includes(String(brandName).toLowerCase());
+}
+
+let toptipsTimer = null;
+function showToptips(msg, type = 'info') {
+  const el = document.getElementById('toptips');
+  el.textContent = msg;
+  const cls = type === 'warn' ? 'weui-toptips_warn' : type === 'success' ? 'toptips-ok' : 'toptips-info';
+  el.className = `weui-toptips ${cls}`;
+  el.style.display = 'block';
+  clearTimeout(toptipsTimer);
+  toptipsTimer = setTimeout(() => { el.style.display = 'none'; }, 2400);
+}
+
+function openPriceBookActionSheet() {
+  const books = getAuthorizedBooks();
+  if (books.length < 2) return;
+  const active = getActiveBook();
+  document.getElementById('actionTitle').textContent = '选择价格方案';
+  document.getElementById('actionMenu').innerHTML = books.map(b => {
+    const sel = b.id === active.id;
+    return `<div class="weui-actionsheet__cell" style="${sel ? 'color:var(--weui-BRAND);font-weight:600;' : ''}" onclick="selectPriceBook('${b.id}')">${esc(b.name)}${sel ? '（当前）' : ''}</div>`;
+  }).join('');
+  document.getElementById('actionSheetWrap').style.display = 'block';
+}
+function closeActionSheet() { document.getElementById('actionSheetWrap').style.display = 'none'; }
+function selectPriceBook(bookId) {
+  state.user.preferredBookId = bookId;
+  closeActionSheet();
+  showToptips('价格已切换', 'success');
+  render();
+}
+
+function openHalfDialog(title, html, isFocusCard = false) {
+  if (!isFocusCard) state.focusCard = null;
+  document.getElementById('halfTitle').textContent = title;
+  document.getElementById('halfBody').innerHTML = html;
+  document.getElementById('halfDialogWrap').style.display = 'block';
+}
+function closeHalfDialog() {
+  state.focusCard = null;
+  document.getElementById('halfDialogWrap').style.display = 'none';
+}
+
+function openDialog(title, bodyHtml, actions) {
+  document.getElementById('dialogTitle').textContent = title;
+  document.getElementById('dialogBody').innerHTML = bodyHtml;
+  const ft = document.getElementById('dialogActions');
+  ft.innerHTML = '';
+  actions.forEach(a => {
+    const btn = document.createElement('a');
+    btn.href = 'javascript:;';
+    btn.className = 'weui-dialog__btn ' + (a.primary ? 'weui-dialog__btn_primary' : 'weui-dialog__btn_default');
+    if (a.warn) btn.style.color = 'var(--weui-RED)';
+    btn.textContent = a.label;
+    btn.onclick = () => { closeDialog(); if (a.onClick) a.onClick(); };
+    ft.appendChild(btn);
+  });
+  document.getElementById('dialogWrap').style.display = 'block';
+}
+function closeDialog() { document.getElementById('dialogWrap').style.display = 'none'; }
+
+async function copyText(txt, tip) {
+  try {
+    await navigator.clipboard.writeText(txt);
+    showToptips(tip || '已复制', 'success');
+  } catch { showToptips('无法自动复制，请长按文字复制', 'info'); }
+}
+
+function saveCurrentScroll() {
+  const pb = document.getElementById('pageBody');
+  if (pb) state.scrollPositions[state.page] = pb.scrollTop;
+  const qr = document.getElementById('quotesRightScroll');
+  if (qr) state.quotesRightScroll = qr.scrollTop;
+  const rail = document.getElementById('brandRail');
+  if (rail) state.brandRailScroll = rail.scrollTop;
+}
+
+function navigate(page, opts = {}) {
+  saveCurrentScroll();
+  closeHalfDialog();
+  const tabPages = ['index', 'quotes', 'mine'];
+  if (tabPages.includes(page)) {
+    state.historyStack = [];
+  } else if (state.page !== page) {
+    state.historyStack.push(state.page);
+  }
+  state.page = page;
+  if (opts.cat !== undefined) {
+    saveLastCat(opts.cat);
+    state.quotesCat = opts.cat;
+    state.quotesSeries = '';
+    state.inBrandFilter = '';
+    state.quotesPageSize = 35;
+    state.quotesRightScroll = 0;
+  }
+  if (opts.brandIdx !== undefined) {
+    state.quotesBrandIdx = opts.brandIdx;
+    state.quotesSeries = '';
+    state.inBrandFilter = '';
+    state.quotesPageSize = 35;
+    state.quotesRightScroll = 0;
+  }
+  if (opts.modelId !== undefined) {
+    state.detailModelId = opts.modelId;
+    const m = getModel(opts.modelId);
+    const dims = parseModelDimensions(m);
+    if (dims.hasSpec) {
+      const prefCap = (opts.cap && dims.caps.includes(opts.cap))
+        ? opts.cap
+        : (dims.caps.find(c => c.includes('256')) || dims.caps[0] || '');
+      state.selectedCap = prefCap;
+      if (dims.warranties.length) {
+        if (opts.warranty && dims.skuMap.has(`${prefCap}||${opts.warranty}`)) {
+          state.selectedWarranty = opts.warranty;
+        } else if (dims.skuMap.has(`${prefCap}||无保`)) {
+          state.selectedWarranty = '无保';
+        } else {
+          state.selectedWarranty = dims.warranties.find(w => dims.skuMap.has(`${prefCap}||${w}`)) || dims.warranties[0];
+        }
+      } else {
+        state.selectedWarranty = '';
+      }
+    } else {
+      state.selectedCap = '';
+      state.selectedWarranty = '';
+    }
+    state.preMatchedNotice = opts.preMatchedNotice || '';
+    state.specConfirmed = true;
+    if (state.searchQuery.trim() && state.historyStack.at(-1) === 'search') {
+      state.searchHistory = [state.searchQuery.trim(), ...state.searchHistory.filter(q => q !== state.searchQuery.trim())].slice(0, 8);
+    }
+    if (!opts.skipRecent) {
+      state.recent = state.recent.filter(r => r.modelId !== opts.modelId);
+      state.recent.unshift({ id: 'r_' + Date.now(), modelId: opts.modelId, cap: state.selectedCap, warranty: state.selectedWarranty, time: '刚刚' });
+      state.recent = state.recent.slice(0, 15);
+    }
+  }
+  if (opts.feedbackType) state.feedbackType = opts.feedbackType;
+  if (opts.feedbackText !== undefined) state.feedbackText = opts.feedbackText;
+  if (page === 'feedback') state.feedbackSubmitted = false;
+  if (opts.focusSearch) state.shouldFocusSearch = true;
+  render();
+  document.getElementById('pageBody').scrollTop = 0;
+}
+
+/* Normal Back: preserves previous search keyword, brand filter, and scroll position! */
+function goBack() {
+  closeHalfDialog();
+  const prev = state.historyStack.pop() || 'index';
+  state.page = prev;
+  state.shouldFocusSearch = false;
+  render();
+  const pb = document.getElementById('pageBody');
+  if (pb && state.scrollPositions[prev] != null) pb.scrollTop = state.scrollPositions[prev];
+  const qr = document.getElementById('quotesRightScroll');
+  if (qr && prev === 'quotes') qr.scrollTop = state.quotesRightScroll;
+}
+
+/* "继续查下一台": explicitly resets previous search & spec state and auto-focuses input! */
+function startNextPhone() {
+  closeHalfDialog();
+  state.searchQuery = '';
+  state.searchBrandIdx = -1;
+  state.searchLimit = 40;
+  state.selectedCap = '';
+  state.selectedWarranty = '';
+  state.specConfirmed = false;
+  state.preMatchedNotice = '';
+  state.scrollPositions['search'] = 0;
+  state.historyStack = ['index'];
+  state.page = 'search';
+  state.shouldFocusSearch = true;
+  render();
+  document.getElementById('pageBody').scrollTop = 0;
+  showToptips('请输入下一台机型', 'info');
+}
+
+/* Reactive Customer Focus Card Renderer (always re-reads live price, offline, expired, and permission!) */
+function openCustomerFocusCard(modelId, condIdx, isInquiry = false) {
+  state.focusCard = {
+    modelId,
+    cap: state.selectedCap,
+    warranty: state.selectedWarranty,
+    condIdx,
+    isInquiry,
+  };
+  renderFocusCard();
+}
+
+function renderFocusCard() {
+  if (!state.focusCard) return;
+  const { modelId, cap, warranty, condIdx, isInquiry } = state.focusCard;
+  const m = getModel(modelId);
+  const dims = parseModelDimensions(m);
+  const sku = dims.hasSpec ? dims.skuMap.get(`${cap}||${warranty}`) : m[7][0];
+  const cell = (!isInquiry && sku) ? sku[1].find(c => c[0] === condIdx) : null;
+  const condName = isInquiry ? '人工询价' : RAW.condNames[condIdx];
+  const book = getActiveBook();
+  const baseVal = cell ? cell[1] : null;
+  const st = isInquiry ? 3 : (cell ? cell[2] : 1);
+  const amt = (st === 0 && baseVal != null && !state.expired) ? calcBookPrice(baseVal, book) : null;
+  const remark = RAW.remarks[m[6]] || '';
+
+  // Independent status banners inside the Customer Focus Card
+  let statusBanner = '';
+  if (state.offline) {
+    statusBanner += `<div class="offline-strip" style="border-radius:6px;margin-bottom:10px;border:0.5px solid #FDE68A;"><strong>历史报价</strong>（更新于 ${RAW.snapshotDate} 09:00）· 当前断网，请联网更新后再参考</div>`;
+  }
+  if (state.expired) {
+    statusBanner += `<div class="offline-strip" style="border-radius:6px;margin-bottom:10px;border:0.5px solid #FDE68A;"><strong>报价已过期</strong> · 请等待最新报价发布后再参考</div>`;
+  }
+
+  let priceBlock = '';
+  if (state.expired) {
+    priceBlock = `<div style="font-size:24px;font-weight:700;color:#92400E;margin:14px 0;">报价已过期，待更新</div>`;
+  } else if (st === 3) {
+    priceBlock = `<div style="font-size:24px;font-weight:700;color:var(--weui-LINK);margin:14px 0;">人工询价</div>`;
+  } else if (st === 2) {
+    priceBlock = `<div style="font-size:24px;font-weight:700;color:var(--weui-FG-1);margin:14px 0;">暂停回收</div>`;
+  } else if (st === 1 || amt === null) {
+    priceBlock = `<div style="font-size:22px;font-weight:600;color:var(--weui-FG-2);margin:14px 0;">暂无报价</div>`;
+  } else {
+    priceBlock = `
+      <div style="margin:14px 0 8px;display:flex;align-items:baseline;justify-content:center;gap:4px;">
+        <span style="font-size:24px;font-weight:700;color:var(--price-red);">¥</span>
+        <span style="font-size:44px;font-weight:700;color:var(--price-red);font-variant-numeric:tabular-nums;letter-spacing:-0.025em;line-height:1;">${Number(amt).toLocaleString('zh-CN')}</span>
+        <span style="font-size:14px;color:var(--ink-2);margin-left:2px;">/ 台</span>
+      </div>
+    `;
+  }
+
+  const guide = RAW.conditionGuides[condName] || '按现场实机成色与核心功能检测结果判定。';
+  const tags = [cap, warranty, condName].filter(Boolean);
+  openHalfDialog('单档报价', `
+    ${statusBanner}
+    <div style="text-align:center;padding:8px 0 14px;">
+      <div style="font-size:19px;font-weight:700;color:var(--ink-1);line-height:1.35;letter-spacing:-0.015em;">${esc(m[4])}</div>
+      <div style="margin-top:8px;display:flex;justify-content:center;flex-wrap:wrap;gap:6px;">
+        ${tags.map((t, i) => `<span style="padding:3px 10px;border-radius:6px;font-size:13px;font-weight:600;background:${i === tags.length - 1 ? 'var(--brand-tint)' : 'var(--bg-subtle)'};color:${i === tags.length - 1 ? 'var(--brand)' : 'var(--ink-1)'};">${esc(t)}</span>`).join('')}
+      </div>
+      ${priceBlock}
+      <div style="font-size:12px;color:var(--ink-3);font-variant-numeric:tabular-nums;">更新于 ${RAW.snapshotDate} 09:00${state.priceOffset ? ' · 已同步最新调价' : ''}</div>
+    </div>
+    <div style="background:var(--bg-canvas);border-radius:12px;padding:12px 14px;font-size:13.5px;color:var(--ink-2);line-height:1.6;">
+      <div style="font-weight:600;color:var(--ink-1);margin-bottom:4px;">${esc(condName)} · 判级标准</div>
+      <div>${esc(guide)}</div>
+    </div>
+    ${remark ? `<div class="detail-remark-box" style="margin:10px 0 0;"><span class="detail-remark-tag">备注</span><span>${esc(remark)}</span></div>` : ''}
+    <p style="text-align:center;font-size:11.5px;color:var(--ink-3);margin:14px 0 2px;">价格仅供现场回收参考，请结合机器实际情况判断。</p>
+  `, true);
+}
+
+function openConditionGuide(modelId) {
+  const m = getModel(modelId);
+  const dims = parseModelDimensions(m);
+  const selected = dims.skuMap.get(`${state.selectedCap}||${state.selectedWarranty}`);
+  const condIndices = [...new Set((selected ? [selected] : m[7]).flatMap(s => s[1].map(c => c[0])))];
+  const rows = condIndices.map(ci => {
+    const cname = RAW.condNames[ci];
+    return `
+      <div style="padding:12px 0;border-bottom:0.5px solid var(--weui-FG-3);">
+        <div style="font-size:15.5px;font-weight:600;color:var(--weui-FG-0);">${esc(cname)}</div>
+        <div style="font-size:14px;color:var(--weui-FG-1);margin-top:4px;line-height:1.55;">${esc(RAW.conditionGuides[cname] || '按现场实机成色与功能判断。')}</div>
+      </div>
+    `;
+  }).join('');
+  openHalfDialog('判级说明', rows);
+}
+
+function openInviteDialog() {
+  const u = state.user;
+  const listHtml = u.referrals.length
+    ? `<div class="weui-cells" style="margin-top:8px;">${u.referrals.map(r => `
+        <div class="weui-cell" style="padding:12px 0;">
+          <div class="weui-cell__bd"><p style="font-size:15px;">${esc(r.nickname)}</p></div>
+          <div class="weui-cell__ft" style="font-size:13.5px;">${esc(r.createdAt)}</div>
+        </div>`).join('')}</div>`
+    : `<div class="weui-loadmore weui-loadmore_line"><span class="weui-loadmore__tips">暂无直推注册记录</span></div>`;
+
+  openHalfDialog('邀请同行使用', `
+    <div style="background:var(--weui-BG-1);border-radius:8px;padding:16px;text-align:center;margin-bottom:16px;">
+      <div style="width:112px;height:112px;margin:0 auto 10px;background:#FFF;border:0.5px solid var(--weui-FG-3);border-radius:8px;display:flex;align-items:center;justify-content:center;">
+        <svg width="92" height="92" viewBox="0 0 96 96">
+          <rect width="96" height="96" fill="#FFF"/>
+          <rect x="8" y="8" width="24" height="24" rx="2" stroke="#111" stroke-width="5" fill="none"/><rect x="15" y="15" width="10" height="10" fill="#111"/>
+          <rect x="64" y="8" width="24" height="24" rx="2" stroke="#111" stroke-width="5" fill="none"/><rect x="71" y="15" width="10" height="10" fill="#111"/>
+          <rect x="8" y="64" width="24" height="24" rx="2" stroke="#111" stroke-width="5" fill="none"/><rect x="15" y="71" width="10" height="10" fill="#111"/>
+          <rect x="42" y="42" width="12" height="12" rx="2" fill="#07C160"/>
+          <rect x="42" y="12" width="8" height="18" fill="#111"/><rect x="64" y="44" width="22" height="8" fill="#111"/>
+          <rect x="42" y="66" width="16" height="8" fill="#111"/><rect x="68" y="64" width="18" height="20" fill="#111"/>
+        </svg>
+      </div>
+      <div style="font-size:14.5px;color:var(--weui-FG-1);">专属推荐码：<strong style="font-size:18px;color:var(--weui-FG-0);letter-spacing:1px;">${esc(u.inviteCode)}</strong></div>
+      <div style="font-size:13px;color:var(--weui-FG-2);margin-top:4px;">新同行首次微信登录自动绑定一级推荐关系</div>
+      <div style="display:flex;gap:10px;margin-top:14px;">
+        <a href="javascript:;" class="weui-btn weui-btn_default" style="flex:1;margin:0;padding:10px;font-size:15px;" onclick="copyText('${u.inviteCode}','推荐码已复制')">复制推荐码</a>
+        <a href="javascript:;" class="weui-btn weui-btn_primary" style="flex:1;margin:0;padding:10px;font-size:15px;" onclick="closeHalfDialog();showToptips('已调起微信转发（仅带推荐码）','success')">发给好友</a>
+      </div>
+    </div>
+    <div style="font-size:14.5px;font-weight:600;color:var(--weui-FG-0);">我邀请的同行（共 ${u.referrals.length} 人 · 仅一级）</div>
+    ${listHtml}
+  `);
+}
+
+function renderChrome() {
+  const navWrap = document.getElementById('wxNavWrap');
+  const navLeft = document.getElementById('wxNavLeft');
+  const navTitle = document.getElementById('wxNavTitle');
+  const tabShell = document.getElementById('wxTabbarShell');
+  const tabbar = document.getElementById('wxTabbar');
+
+  const meta = {
+    'index': { title: '手机回收报价', tab: true, white: true },
+    'quotes': { title: '报价表', tab: true, white: true },
+    'mine': { title: '我的', tab: true, white: true },
+    'search': { title: '搜索型号', tab: false, white: false },
+    'model-detail': { title: '机型报价', tab: false, white: true },
+    'recent': { title: '最近查询', tab: false, white: true },
+    'feedback': { title: '反馈与建议', tab: false, white: true },
+  }[state.page];
+
+  navWrap.className = 'wx-nav-wrap' + (meta.white ? ' nav-white' : '');
+  navTitle.textContent = meta.title;
+  navLeft.innerHTML = meta.tab ? '' : `<button class="wx-back-btn" onclick="goBack()">${SVG.back}</button>`;
+
+  if (meta.tab) {
+    tabShell.style.display = 'block';
+    const tabs = [
+      { id: 'index', label: '首页', icon: SVG.tabHome },
+      { id: 'quotes', label: '报价', icon: SVG.tabQuotes },
+      { id: 'mine', label: '我的', icon: SVG.tabMine },
+    ];
+    tabbar.innerHTML = tabs.map(t => `
+      <div class="weui-tabbar__item ${state.page === t.id ? 'weui-bar__item_on' : ''}" onclick="navigate('${t.id}')" style="cursor:pointer;">
+        <div class="weui-tabbar__icon">${t.icon}</div>
+        <p class="weui-tabbar__label">${t.label}</p>
+      </div>
+    `).join('');
+  } else {
+    tabShell.style.display = 'none';
+  }
+}
+
+/* ==================== 7 PAGES ==================== */
+
+/* Page 1: Home (Distilled & Refined: Search Pill -> Optional Direct-Inviter Contact -> Recent 3 -> 2-Col Category Tiles -> Borderless 3x3 Brand Grid) */
+function renderIndex() {
+  const hotBrands = RAW.brands.map((b, i) => ({ ...b, idx: i })).filter(b => b.hot);
+  const inviterContact = getVisibleInviterContact();
+
+  return `
+    ${state.offline ? `<div class="offline-strip"><strong>历史报价</strong>（${RAW.snapshotDate} 09:00）· 当前断网，请联网更新后再参考</div>` : ''}
+
+    <!-- 1. Clean Pill Search Header -->
+    <div class="search-top-bar">
+      <div class="search-pill" role="button" tabindex="0" onclick="navigate('search', { focusSearch: true })">
+        ${SVG.search}
+        <span>搜索机型、简称或型号代码</span>
+      </div>
+    </div>
+
+    ${inviterContact ? `
+      <!-- Optional: Direct Inviter Contact Strip (Natural business copy: 回收手机找 XXX) -->
+      <div class="inviter-contact-card">
+        <div class="inviter-phone-ico" aria-hidden="true">${SVG.phone}</div>
+        <div class="inviter-contact-body" ${inviterContact.phone ? `onclick="copyText('${esc(inviterContact.phone)}','已复制联系方式')"` : `onclick="openInviterQrDialog()"`}>
+          <div class="inviter-contact-label" style="font-size:13px;font-weight:600;color:var(--ink-1);">回收手机找 ${esc(inviterContact.name)}</div>
+          <div class="inviter-contact-num" style="font-size:13px;font-weight:500;color:var(--ink-2);">
+            ${inviterContact.phone
+              ? `<span>${esc(fmtPhoneDisplay(inviterContact.phone))}</span><span class="detail-copy-ico" aria-hidden="true">${SVG.copy}</span>`
+              : `<span>点右侧扫码加微信</span>`
+            }
+          </div>
+        </div>
+        <div class="inviter-actions">
+          ${inviterContact.wechatQr ? `<button type="button" class="inviter-qr-btn" onclick="openInviterQrDialog()">${SVG.qr}<span>微信</span></button>` : ''}
+          ${inviterContact.phone ? `<button type="button" class="inviter-call-btn" onclick="openDialog('拨打电话','即将调用微信原生拨号联系 ${esc(inviterContact.name)}：${esc(fmtPhoneDisplay(inviterContact.phone))}',[{label:'取消'},{label:'拨打',primary:true,onClick:()=>showToptips('已调起拨号：${esc(inviterContact.phone)}','success')}])">拨打</button>` : ''}
+        </div>
+      </div>
+    ` : ''}
+
+    <!-- 2. Recent Queries (Top Priority Card) -->
+    <div class="ui-card">
+      <div class="ui-card-hd">
+        <span class="ui-card-title">最近查询</span>
+        <a href="javascript:;" class="ui-card-action" onclick="navigate('recent')">全部</a>
+      </div>
+      <div class="weui-cells">
+        ${state.recent.slice(0, 3).map(r => {
+          const m = getModel(r.modelId);
+          const b = getBrandObj(m[2]);
+          const catTag = m[1] === 1 ? '环保机' : '靓机';
+          const specLabel = [r.cap, r.warranty].filter(Boolean).join(' · ');
+          const meta = [hasBrandInName(m[4], b.name) ? '' : b.name, catTag, specLabel || m[3]].filter(Boolean).join(' · ');
+          return `
+            <a href="javascript:;" class="weui-cell weui-cell_access compact-cell" onclick="navigate('model-detail', { modelId:${m[0]}, cap:'${esc(r.cap || '')}', warranty:'${esc(r.warranty || '')}' })">
+              <div class="weui-cell__hd" style="margin-right:10px;">${renderBrandLogo(b, 'sm')}</div>
+              <div class="weui-cell__bd" style="min-width:0;">
+                <p class="model-name-txt">${esc(m[4])}</p>
+                <p class="model-meta-txt">${esc(meta)}</p>
+              </div>
+              <div class="weui-cell__ft"><span class="row-time-txt">${esc(r.time)}</span></div>
+            </a>
+          `;
+        }).join('') || `<div class="weui-loadmore weui-loadmore_line" style="margin:14px auto;"><span class="weui-loadmore__tips">暂无查询记录</span></div>`}
+      </div>
+    </div>
+
+    <!-- 3. Recovery Categories (Clean Side-by-Side Tiles, Custom Minimal SVG Icons) -->
+    <div class="home-cat-row">
+      <a href="javascript:;" class="home-cat-tile ${state.lastCat === 1 ? 'is-active' : ''}" onclick="navigate('quotes', { cat:1 })">
+        <div class="home-cat-top">
+          <div class="home-cat-icon">${SVG.ecoPhone}</div>
+          ${state.lastCat === 1 ? '<span class="home-cat-dot" aria-label="当前常用"></span>' : ''}
+        </div>
+        <div>
+          <div class="home-cat-name">环保机回收</div>
+          <div class="home-cat-desc">开机 / 屏坏 / 不开机</div>
+        </div>
+      </a>
+      <a href="javascript:;" class="home-cat-tile ${state.lastCat === 0 ? 'is-active' : ''}" onclick="navigate('quotes', { cat:0 })">
+        <div class="home-cat-top">
+          <div class="home-cat-icon">${SVG.mintPhone}</div>
+          ${state.lastCat === 0 ? '<span class="home-cat-dot" aria-label="当前常用"></span>' : ''}
+        </div>
+        <div>
+          <div class="home-cat-name">靓机回收</div>
+          <div class="home-cat-desc">按容量与成色查价</div>
+        </div>
+      </a>
+    </div>
+
+    <!-- 4. Borderless 3x3 Brand Grid with Inline Segmented Category Toggle -->
+    <div class="ui-card">
+      <div class="ui-card-hd">
+        <span class="ui-card-title">按品牌查价</span>
+        <div class="seg-pill" role="tablist" aria-label="品牌入口分类">
+          <button type="button" class="seg-pill-btn ${state.lastCat === 1 ? 'active' : ''}" onclick="saveLastCat(1);render()">环保机</button>
+          <button type="button" class="seg-pill-btn ${state.lastCat === 0 ? 'active' : ''}" onclick="saveLastCat(0);render()">靓机</button>
+        </div>
+      </div>
+      <div class="brand-grid">
+        ${hotBrands.map(b => `
+          <a href="javascript:;" class="brand-grid-item" onclick="navigate('quotes', { cat:${state.lastCat}, brandIdx:${b.idx} })">
+            ${renderBrandLogo(b, 'grid')}
+            <span class="brand-grid-name">${esc(b.name)}</span>
+          </a>
+        `).join('')}
+      </div>
+    </div>
+
+    <div class="detail-footer-compact" style="padding:14px 16px 20px;">
+      <p class="detail-footer-note">行情更新于 ${RAW.snapshotDate} 09:00 · 价格仅供现场回收参考</p>
+    </div>
+  `;
+}
+
+function openAllSeriesDialog(brandName, seriesPairsJson) {
+  const pairs = JSON.parse(seriesPairsJson);
+  const totalModels = pairs.reduce((sum, [, c]) => sum + c, 0);
+  const html = `<div class="weui-cells weui-cells_radio" style="margin-top:0;">
+    ${[['', totalModels], ...pairs].map(([name, count]) => `
+      <label class="weui-cell weui-check__label compact-cell">
+        <div class="weui-cell__bd" style="display:flex;align-items:center;justify-content:space-between;padding-right:10px;">
+          <span style="font-size:15px;font-weight:${state.quotesSeries === name ? '600' : '400'};color:${state.quotesSeries === name ? 'var(--brand)' : 'var(--ink-1)'};">${esc(name || '全部系列')}</span>
+          <span style="font-size:12px;color:var(--ink-3);font-variant-numeric:tabular-nums;">${count} 款</span>
+        </div>
+        <div class="weui-cell__ft"><input type="radio" class="weui-check" name="series" ${state.quotesSeries === name ? 'checked' : ''} onchange="state.quotesSeries='${esc(name)}';state.quotesPageSize=35;state.quotesRightScroll=0;closeHalfDialog();render()" /><span class="weui-icon-checked"></span></div>
+      </label>`).join('')}
+  </div>`;
+  openHalfDialog(`${brandName} · 切换系列`, html);
+}
+
+/* Page 2: Flat Quotes Catalog (Tab 2) */
+function renderQuotes() {
+  const canSwitch = getAuthorizedBooks().length >= 2;
+  const catModels = RAW.models.filter(m => m[1] === state.quotesCat);
+
+  const brandCounts = new Map();
+  for (const m of catModels) brandCounts.set(m[2], (brandCounts.get(m[2]) || 0) + 1);
+  const availBrandIndices = [];
+  RAW.brands.forEach((_, idx) => { if (brandCounts.has(idx)) availBrandIndices.push(idx); });
+  if (!brandCounts.has(state.quotesBrandIdx)) {
+    state.quotesBrandIdx = availBrandIndices[0] ?? 0;
+    state.quotesSeries = '';
+    state.inBrandFilter = '';
+  }
+
+  const activeBrand = getBrandObj(state.quotesBrandIdx);
+  const brandModels = catModels.filter(m => m[2] === state.quotesBrandIdx);
+
+  const seriesMap = new Map();
+  for (const m of brandModels) {
+    const s = m[3] || '常规系列';
+    if (!seriesMap.has(s)) seriesMap.set(s, []);
+    seriesMap.get(s).push(m);
+  }
+  const APPLE_SERIES_ORDER = ['18系列', '17系列', '16系列', '15系列', '14系列', '13系列', '12系列', '11系列', 'X系列', 'SE系列', '8及以下', '点数系列'];
+  const seriesArr = Array.from(seriesMap.entries()).sort((a, b) => {
+    if (activeBrand.name === '苹果') {
+      const ia = APPLE_SERIES_ORDER.indexOf(a[0]);
+      const ib = APPLE_SERIES_ORDER.indexOf(b[0]);
+      return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
+    }
+    return b[1].length - a[1].length;
+  });
+  if (state.quotesSeries && !seriesMap.has(state.quotesSeries)) state.quotesSeries = '';
+
+  const kw = state.inBrandFilter.trim().toLowerCase();
+  let list = state.quotesSeries ? (seriesMap.get(state.quotesSeries) || []) : brandModels;
+  if (!kw && activeBrand.name === '苹果') {
+    list = [...list].sort((a, b) => {
+      const ia = APPLE_SERIES_ORDER.indexOf(a[3]);
+      const ib = APPLE_SERIES_ORDER.indexOf(b[3]);
+      return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
+    });
+  }
+  if (kw) {
+    list = searchAllModels(kw, state.quotesBrandIdx).map(x => x.m).filter(m => m[1] === state.quotesCat);
+  }
+  const sliced = list.slice(0, state.quotesPageSize);
+  const hasMoreSeries = seriesArr.length > 3;
+  const visibleSeries = hasMoreSeries ? seriesArr.slice(0, 2) : seriesArr;
+  if (hasMoreSeries && state.quotesSeries && !visibleSeries.some(([s]) => s === state.quotesSeries)) {
+    visibleSeries.unshift([state.quotesSeries, (seriesMap.get(state.quotesSeries) || []).length]);
+  }
+  window._openCurrentSeriesDialog = () => openAllSeriesDialog(activeBrand.name, JSON.stringify(seriesArr.map(([s, l]) => [s, l.length])));
+
+  return `
+    <div class="quotes-root">
+      ${state.offline ? `<div class="offline-strip"><strong>历史报价</strong>（${RAW.snapshotDate} 09:00）· 断网模式</div>` : ''}
+
+      <div class="quotes-tabs" role="tablist">
+        <div class="quotes-tab ${state.quotesCat === 1 ? 'active' : ''}" role="tab" onclick="saveLastCat(1);state.quotesCat=1;state.quotesSeries='';state.inBrandFilter='';state.quotesPageSize=35;state.quotesRightScroll=0;render()">环保机回收</div>
+        <div class="quotes-tab ${state.quotesCat === 0 ? 'active' : ''}" role="tab" onclick="saveLastCat(0);state.quotesCat=0;state.quotesSeries='';state.inBrandFilter='';state.quotesPageSize=35;state.quotesRightScroll=0;render()">靓机回收</div>
+      </div>
+
+      <div class="quotes-meta-strip">
+        <span>共 ${catModels.length} 款机型</span>
+        <span>更新 ${RAW.snapshotDate.slice(5)} 09:00</span>
+      </div>
+
+      <div class="quotes-split">
+        <div class="brand-rail" id="brandRail" onscroll="state.brandRailScroll=this.scrollTop">
+          ${availBrandIndices.map(bIdx => {
+            const b = getBrandObj(bIdx);
+            return `
+              <button type="button" class="brand-rail-item ${state.quotesBrandIdx === bIdx ? 'active' : ''}" onclick="state.quotesBrandIdx=${bIdx};state.quotesSeries='';state.inBrandFilter='';state.quotesPageSize=35;state.quotesRightScroll=0;render()">
+                ${renderBrandLogo(b, 'sm')}
+                <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(b.name)}</span>
+              </button>
+            `;
+          }).join('')}
+        </div>
+
+        <div class="quotes-right" id="quotesRightScroll" onscroll="state.quotesRightScroll=this.scrollTop">
+          <div class="quotes-right-sticky">
+            <div class="quotes-inbrand-bar">
+              <div class="search-pill" style="height:34px;border-radius:8px;padding:0 10px;">
+                ${SVG.search}
+                <input type="text" inputmode="search" aria-label="品牌内搜索" id="inBrandInput" placeholder="搜索${esc(activeBrand.name)}机型" value="${esc(state.inBrandFilter)}" oncompositionstart="state.composing=true" oncompositionend="state.composing=false;state.inBrandFilter=this.value;state.quotesPageSize=35;keepInBrandFocus()" oninput="state.inBrandFilter=this.value;if(!state.composing){state.quotesPageSize=35;keepInBrandFocus()}" />
+                ${state.inBrandFilter ? `<button type="button" class="search-clear-btn" aria-label="清空搜索" onclick="state.inBrandFilter='';keepInBrandFocus()">×</button>` : ''}
+              </div>
+            </div>
+            ${(!kw && seriesArr.length > 1) ? `
+              <div class="series-bar-inline">
+                ${hasMoreSeries
+                  ? `<button type="button" class="series-dropdown-btn ${state.quotesSeries === '' ? 'active' : ''}" aria-haspopup="listbox" onclick="window._openCurrentSeriesDialog()"><span>全部</span><span class="series-dd-count">${seriesArr.length}</span><span class="series-dd-div" aria-hidden="true"></span><span class="series-dd-ico" aria-hidden="true">${SVG.chevronDown}</span></button>`
+                  : `<button type="button" class="chip chip-sm ${state.quotesSeries === '' ? 'active' : ''}" onclick="state.quotesSeries='';state.quotesPageSize=35;state.quotesRightScroll=0;render()">全部</button>`
+                }
+                ${visibleSeries.map(([sname]) => `
+                  <button type="button" class="chip chip-sm ${state.quotesSeries === sname ? 'active' : ''}" onclick="state.quotesSeries='${esc(sname)}';state.quotesPageSize=35;state.quotesRightScroll=0;render()">${esc(sname.replace(/系列$/, ''))}</button>
+                `).join('')}
+              </div>
+            ` : ''}
+          </div>
+          <div style="flex:1;">
+            ${list.length ? `
+              <div class="weui-cells" style="margin-top:0;">
+                ${sliced.map(m => renderCompactModelRow(m)).join('')}
+              </div>
+              ${list.length > sliced.length ? `
+                <div style="padding:12px;text-align:center;">
+                  <button type="button" class="chip" onclick="saveCurrentScroll();state.quotesPageSize+=40;render()">加载更多（剩余 ${list.length - sliced.length} 款）</button>
+                </div>
+              ` : `<div class="weui-loadmore weui-loadmore_line" style="margin:14px auto;"><span class="weui-loadmore__tips">共 ${list.length} 款</span></div>`}
+            ` : `<div class="weui-loadmore weui-loadmore_line"><span class="weui-loadmore__tips">未找到“${esc(state.inBrandFilter)}”</span></div>`}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderCompactModelRow(m) {
+  return `
+    <a href="javascript:;" class="weui-cell weui-cell_access compact-cell" onclick="navigate('model-detail', { modelId:${m[0]} })">
+      <div class="weui-cell__bd" style="min-width:0;">
+        <p class="model-name-txt">${esc(m[4])}</p>
+      </div>
+      <div class="weui-cell__ft"></div>
+    </a>
+  `;
+}
+function keepInBrandFocus() {
+  state.quotesRightScroll = 0;
+  const el = document.getElementById('inBrandInput');
+  const pos = el ? el.selectionStart : 0;
+  render();
+  const next = document.getElementById('inBrandInput');
+  if (next) { next.focus({ preventScroll:true }); next.setSelectionRange(pos, pos); }
+}
+
+/* Shared model/alias/spec search for the search page and brand catalog. */
+function normalizeSearch(value) {
+  return String(value).normalize('NFKC').toLowerCase()
+    .replace(/(\d)\s*pm\b/g, '$1 pro max')
+    .replace(/pro\s*max/g, 'promax').replace(/[\s_—-]+/g, '');
+}
+function splitSearchSpec(value) {
+  let text = String(value).normalize('NFKC').toLowerCase();
+  const match = text.match(/(^|[^a-z0-9])(\d{1,2}\s*\+\s*(?:64|128|256|512|1024|[12]\s*t(?:b)?)(?:g(?:b)?)?|(?:64|128|256|512|1024)(?:g(?:b)?)?|[12]\s*t(?:b)?)(?=$|[^a-z0-9])/i);
+  let storage = '', ram = '';
+  if (match) {
+    const token = match[2].replace(/\s+/g, '').replace(/gb/g, 'g').replace(/tb/g, 't');
+    const parts = token.split('+');
+    if (parts.length === 2) ram = parts[0];
+    storage = parts[parts.length - 1].replace(/g$/, '').replace(/^1024$/, '1t');
+    text = text.slice(0, match.index) + match[1] + text.slice(match.index + match[0].length);
+  }
+  return { text: normalizeSearch(text).replace(/[()（）]/g, ''), storage, ram };
+}
+const BRAND_ALIASES = { '苹果':['iphone','apple','苹果'], '华为':['huawei','华为'], '荣耀':['honor','荣耀'],
+  '红米':['redmi','红米'], '小米':['xiaomi','小米'], '三星':['samsung','三星'], '一加':['oneplus','一加'],
+  '真我':['realme','真我'] };
+function aliasesForBrand(index) {
+  const name = getBrandObj(index).name;
+  return (BRAND_ALIASES[name] || [name]).map(normalizeSearch);
+}
+function stripModelBrand(text, index) {
+  let result = text;
+  for (const alias of aliasesForBrand(index)) if (result.startsWith(alias)) result = result.slice(alias.length);
+  return result;
+}
+const SEARCH_INDEX = RAW.models.map(m => ({
+  m, name: stripModelBrand(splitSearchSpec(m[4]).text, m[2]),
+  codes: m[5].map(normalizeSearch),
+  caps: parseModelDimensions(m).caps.map(cap => ({ cap, ...splitSearchSpec(cap) })),
+  embedded: splitSearchSpec(m[4]),
+}));
+function searchAllModels(rawQ, brandIdxFilter = -1) {
+  const query = splitSearchSpec(rawQ);
+  if (!query.text && !query.storage) return [];
+  let brand = brandIdxFilter, name = query.text;
+  const explicit = RAW.brands.map((_, index) => ({ index, alias: aliasesForBrand(index).find(a => name.startsWith(a)) }))
+    .filter(x => x.alias).sort((a,b) => b.alias.length - a.alias.length)[0];
+  if (explicit) {
+    if (brand >= 0 && brand !== explicit.index) return [];
+    brand = explicit.index;
+    name = name.slice(explicit.alias.length);
+  }
+  const specMatches = spec => spec.storage === query.storage && (!query.ram || spec.ram === query.ram);
+  const results = [];
+  for (const entry of SEARCH_INDEX) {
+    const { m } = entry;
+    if (brand >= 0 && m[2] !== brand) continue;
+    const exactCode = name && entry.codes.includes(name);
+    let rank = exactCode ? 100 : name && entry.name === name ? 80 :
+      name && entry.name.startsWith(name) && !(/^\d/.test(entry.name.slice(name.length)) && /\d$/.test(name)) ? 60 :
+      name && entry.name.includes(name) ? 40 : !name && (brand >= 0 || query.storage) ? 20 : 0;
+    if (!rank) continue;
+    let preCap = '', specRank = 0;
+    if (query.storage) {
+      const matches = entry.caps.filter(specMatches);
+      if (matches.length) {
+        specRank = 2;
+        // Storage alone cannot silently choose a RAM or edition variant.
+        if (matches.length === 1 && (!matches[0].ram || query.ram === matches[0].ram)) preCap = matches[0].cap;
+      } else if (entry.embedded.storage) {
+        if (!specMatches(entry.embedded)) continue;
+        specRank = 2;
+      } else if (entry.caps.some(x => x.storage)) continue;
+    }
+    results.push({ m, rank, specRank, preCap, reason: exactCode ? `代码 ${m[5][entry.codes.indexOf(name)]}` : specRank ? '规格匹配' : '型号匹配' });
+  }
+  results.sort((a,b) => Number(b.rank === 100) - Number(a.rank === 100) || b.specRank - a.specRank || b.rank - a.rank ||
+    Number(b.m[1] === state.lastCat) - Number(a.m[1] === state.lastCat) || a.m[4].localeCompare(b.m[4], 'zh-CN', { numeric:true }));
+  return results;
+}
+
+function renderSearch() {
+  const q = state.searchQuery;
+  const results = q.trim() ? searchAllModels(q, state.searchBrandIdx) : [];
+  const isAmbiguous = q.trim().length > 0 && q.trim().length <= 2 && results.length > 1;
+  const hotBrands = RAW.brands.map((b, i) => ({ ...b, idx: i })).filter(b => b.hot);
+
+  let content = '';
+  if (!q.trim()) {
+    content = `
+      <div class="ui-card">
+        <div class="ui-card-hd">
+          <span class="ui-card-title">搜索历史</span>
+          ${state.searchHistory.length ? `<a href="javascript:;" class="ui-card-action" onclick="state.searchHistory=[];render()">清空</a>` : ''}
+        </div>
+        <div style="padding:2px 14px 14px;display:flex;flex-wrap:wrap;gap:6px;">
+          ${state.searchHistory.map(h => `<button type="button" class="chip chip-sm" data-query="${esc(h)}" onclick="state.searchQuery=this.dataset.query;state.searchLimit=40;render()">${esc(h)}</button>`).join('') || '<span style="font-size:13px;color:var(--ink-3);">暂无历史</span>'}
+        </div>
+      </div>
+      <div class="ui-card">
+        <div class="ui-card-hd"><span class="ui-card-title">常用搜索</span></div>
+        <div style="padding:2px 14px 14px;display:flex;flex-wrap:wrap;gap:6px;">
+          ${['16pm 256', '苹果16', 'K80 12+256', 'A3297', 'Mate 70', 'Find X8'].map(ex => `<button type="button" class="chip chip-sm" onclick="state.searchQuery='${ex}';state.searchLimit=40;render()">${ex}</button>`).join('')}
+        </div>
+      </div>
+    `;
+  } else if (results.length === 0) {
+    content = `
+      <div class="ui-card" style="padding:36px 20px;text-align:center;">
+        <i class="weui-icon-info weui-icon_msg" style="color:var(--ink-3);"></i>
+        <h2 style="font-size:17px;font-weight:600;color:var(--ink-1);margin:14px 0 6px;">未找到匹配结果</h2>
+        <p style="font-size:13.5px;color:var(--ink-2);line-height:1.55;margin:0 0 20px;">未找到与“${esc(q)}”匹配的机型，可尝试标准名称或型号代码；若确未收录可提交反馈。</p>
+        <a href="javascript:;" class="ui-btn ui-btn-primary ui-btn-block" data-query="${esc(q)}" onclick="navigate('feedback', { feedbackType:'missing_model', feedbackText:'机型搜索问题：'+this.dataset.query })">反馈机型问题</a>
+      </div>
+    `;
+  } else {
+    const sliced = results.slice(0, state.searchLimit);
+    content = `
+      ${isAmbiguous ? `<div class="offline-strip">找到 ${results.length} 款相近机型，请点选确认。</div>` : ''}
+      <div class="ui-section-hd"><span>共找到 ${results.length} 款机型</span></div>
+      <div class="ui-card" style="margin-top:0;">
+        <div class="weui-cells">
+          ${sliced.map(({ m, reason, preCap }) => {
+            const b = getBrandObj(m[2]);
+            const catTag = m[1] === 0 ? '靓机' : '环保机';
+            const meta = [hasBrandInName(m[4], b.name) ? '' : b.name, catTag, reason, preCap ? `预选 ${preCap}` : ''].filter(Boolean).join(' · ');
+            return `
+              <a href="javascript:;" class="weui-cell weui-cell_access compact-cell" onclick="navigate('model-detail', { modelId:${m[0]}, cap:'${esc(preCap)}' })">
+                <div class="weui-cell__hd" style="margin-right:10px;">${renderBrandLogo(b, 'sm')}</div>
+                <div class="weui-cell__bd" style="min-width:0;">
+                  <p class="model-name-txt">${esc(m[4])}</p>
+                  <p class="model-meta-txt">${esc(meta)}</p>
+                </div>
+                <div class="weui-cell__ft"></div>
+              </a>
+            `;
+          }).join('')}
+        </div>
+      </div>
+      ${results.length > sliced.length ? `
+        <div style="padding:12px;text-align:center;">
+          <button type="button" class="chip" onclick="state.searchLimit+=40;render()">加载更多（剩余 ${results.length - sliced.length} 款）</button>
+        </div>
+      ` : '<div style="height:16px;"></div>'}
+    `;
+  }
+
+  return `
+    <div style="position:sticky;top:0;z-index:10;">
+      <div class="search-top-bar">
+        <div class="search-pill">
+          ${SVG.search}
+          <input type="text" inputmode="search" enterkeyhint="search" aria-label="搜索机型" id="searchInput" placeholder="输入机型、简称或型号代码" value="${esc(q)}" oncompositionstart="state.composing=true" oncompositionend="state.composing=false;state.searchQuery=this.value;state.searchLimit=40;keepSearchFocus()" oninput="state.searchQuery=this.value;if(!state.composing){state.searchLimit=40;keepSearchFocus()}" />
+          ${q ? `<button type="button" class="search-clear-btn" aria-label="清空" onclick="state.searchQuery='';keepSearchFocus()">×</button>` : ''}
+        </div>
+        <a href="javascript:;" class="search-cancel-link" onclick="goBack()">取消</a>
+      </div>
+      <div class="h-scroll-bar">
+        <button type="button" class="chip chip-sm ${state.searchBrandIdx === -1 ? 'active' : ''}" onclick="state.searchBrandIdx=-1;render()">全部</button>
+        ${hotBrands.map(b => `<button type="button" class="chip chip-sm ${state.searchBrandIdx === b.idx ? 'active' : ''}" onclick="state.searchBrandIdx=${b.idx};render()">${esc(b.name)}</button>`).join('')}
+      </div>
+    </div>
+    ${content}
+  `;
+}
+function keepSearchFocus() {
+  const input = document.getElementById('searchInput');
+  const pos = input ? input.selectionStart : 0;
+  render();
+  const next = document.getElementById('searchInput');
+  if (next) { next.focus({ preventScroll:true }); next.setSelectionRange(pos, pos); }
+}
+
+/* Page 4: Model Detail (Single-Screen Compact Layout, Immediate Default SKU, Zero Redundancy) */
+function renderModelDetail() {
+  const m = getModel(state.detailModelId);
+  const b = getBrandObj(m[2]);
+  const book = getActiveBook();
+  const dims = parseModelDimensions(m);
+  if (!book) return `<div class="weui-msg"><div class="weui-msg__icon-area"><i class="weui-icon-info weui-icon_msg"></i></div><h2 class="weui-msg__title">暂无可用报价</h2><p class="weui-msg__desc">当前账号暂无可查看的价格方案，请联系客服。</p><div class="weui-msg__opr-area"><button class="weui-btn weui-btn_default" onclick="goBack()">返回上一页</button></div></div>`;
+
+  if (dims.hasSpec) {
+    if (dims.caps.length && !dims.caps.includes(state.selectedCap)) {
+      state.selectedCap = dims.caps.find(c => c.includes('256')) || dims.caps[0];
+    }
+    if (dims.warranties.length && !dims.skuMap.has(`${state.selectedCap}||${state.selectedWarranty}`)) {
+      state.selectedWarranty = dims.skuMap.has(`${state.selectedCap}||无保`)
+        ? '无保'
+        : (dims.warranties.find(w => dims.skuMap.has(`${state.selectedCap}||${w}`)) || dims.warranties[0]);
+    }
+  }
+
+  const activeSku = dims.hasSpec
+    ? (dims.skuMap.get(`${state.selectedCap}||${state.selectedWarranty}`) || m[7][0])
+    : m[7][0];
+  const cells = activeSku ? activeSku[1] : [];
+  const remark = RAW.remarks[m[6]] || '';
+  const shortDate = RAW.snapshotDate.slice(5);
+  const metaParts = [hasBrandInName(m[4], b.name) ? '' : b.name, m[3], m[5].length ? m[5].slice(0, 2).join('/') : ''].filter(Boolean);
+
+  return `
+    <div class="detail-wrap">
+      <div class="detail-main">
+        ${state.offline ? `<div class="offline-strip"><strong>历史报价</strong>（${RAW.snapshotDate} 09:00）· 当前断网，请联网更新后再参考</div>` : ''}
+        ${state.expired ? `<div class="offline-strip"><strong>报价已过期</strong> · 请等待最新报价更新后再参考</div>` : ''}
+
+        <!-- 1. Inset Model Header + Inline Spec/Warranty Chips -->
+        <div class="ui-card">
+          <div class="detail-head">
+            <div class="detail-title-row">
+              ${renderBrandLogo(b, 'sm')}
+              <div class="detail-title-txt" onclick="copyText('${esc(m[4])}','已复制机型名')" title="点击复制机型名">
+                <span style="min-width:0;overflow:hidden;text-overflow:ellipsis;">${esc(m[4])}</span>
+                <span class="detail-copy-ico" aria-hidden="true">${SVG.copy}</span>
+              </div>
+              <span class="detail-cat-pill">${m[1] === 0 ? '靓机' : '环保机'}</span>
+            </div>
+            <div class="detail-meta-row">
+              <span class="detail-meta-left">${esc(metaParts.join(' · ') || b.name)}</span>
+              <span class="detail-meta-time">${shortDate} 09:00 更新</span>
+            </div>
+          </div>
+
+          ${dims.hasSpec ? `
+            <div class="spec-section">
+              ${dims.caps.length ? `
+                <div class="spec-row">
+                  <span class="spec-row-label">容量</span>
+                  <div class="spec-wrap">
+                    ${dims.caps.map(c => `<button type="button" class="chip ${state.selectedCap === c ? 'is-selected' : ''}" aria-pressed="${state.selectedCap === c}" onclick="selectCap('${esc(c)}')">${esc(c)}</button>`).join('')}
+                  </div>
+                </div>
+              ` : ''}
+
+              ${dims.warranties.length ? `
+                <div class="spec-row">
+                  <span class="spec-row-label">保修</span>
+                  <div class="spec-wrap">
+                    ${dims.warranties.map(w => `<button type="button" class="chip ${state.selectedWarranty === w ? 'is-selected' : ''}" aria-pressed="${state.selectedWarranty === w}" onclick="selectWarranty('${esc(w)}')">${esc(w)}</button>`).join('')}
+                  </div>
+                </div>
+              ` : ''}
+            </div>
+          ` : ''}
+        </div>
+
+        <!-- 2. Inset Single-Line Price Table Card -->
+        <div class="ui-card">
+          <div class="detail-quote-hd">
+            <div>
+              <span class="detail-quote-title">成色报价</span>
+              <span class="detail-quote-hint">点选单档展示</span>
+            </div>
+            <div class="detail-quote-links">
+              <a href="javascript:;" onclick="openConditionGuide(${m[0]})">判级说明</a>
+              <span class="detail-quote-div"></span>
+              <a href="javascript:;" onclick="openCustomerFocusCard(${m[0]}, -1, true)">人工询价</a>
+            </div>
+          </div>
+
+          <div class="weui-cells">
+            ${cells.length ? cells.map(([condIdx, baseVal, st]) => {
+              const cname = RAW.condNames[condIdx];
+              const amt = (st === 0 && baseVal != null && !state.expired) ? calcBookPrice(baseVal, book) : null;
+              let ftHtml = '';
+              if (state.expired) {
+                ftHtml = `<span class="state-tag state-tag_expired">已过期</span>`;
+              } else if (st === 2) {
+                ftHtml = `<span class="state-tag state-tag_paused">暂停回收</span>`;
+              } else if (st === 3) {
+                ftHtml = `<span class="state-tag state-tag_inquiry">人工询价</span>`;
+              } else if (st === 1 || amt === null) {
+                ftHtml = `<span class="state-tag state-tag_muted">暂无报价</span>`;
+              } else {
+                ftHtml = `<span class="price-val">${fmtPriceHtml(amt)}</span>`;
+              }
+              return `
+                <a href="javascript:;" class="weui-cell detail-price-cell" onclick="openCustomerFocusCard(${m[0]}, ${condIdx}, false)">
+                  <div class="weui-cell__bd" style="min-width:0;">
+                    <p class="detail-cond-name">${esc(cname)}</p>
+                  </div>
+                  <div class="weui-cell__ft">${ftHtml}</div>
+                </a>
+              `;
+            }).join('') : `<div class="weui-loadmore weui-loadmore_line"><span class="weui-loadmore__tips">当前规格组合暂无报价</span></div>`}
+          </div>
+        </div>
+
+        ${remark ? `<div class="detail-remark-box"><span class="detail-remark-tag">备注</span><span>${esc(remark)}</span></div>` : ''}
+
+        <!-- 3. Compact Disclaimer & Utility Links -->
+        <div class="detail-footer-compact">
+          <div class="detail-footer-links">
+            <a href="javascript:;" onclick="openDialog('转发机型','转发卡片仅携带机型与推荐码，不带价格信息，好友打开后按其自身权限查价。',[{label:'知道了',primary:true}])">转发机型</a>
+            <span class="detail-quote-div"></span>
+            <a href="javascript:;" onclick="navigate('feedback', { feedbackType:'price_question', feedbackText:'关于 ${esc(m[4])} 的报价反馈：' })">反馈报错</a>
+          </div>
+          <p class="detail-footer-note">价格仅供现场回收参考，请结合机器实际情况判断。</p>
+        </div>
+      </div>
+
+      <div class="detail-opr-bar">
+        <a href="javascript:;" class="ui-btn ui-btn-secondary" onclick="goBack()">返回上一页</a>
+        <a href="javascript:;" class="ui-btn ui-btn-primary" onclick="startNextPhone()">继续查下一台</a>
+      </div>
+    </div>
+  `;
+}
+
+function confirmSelectedSpec() {
+  const dims = parseModelDimensions(getModel(state.detailModelId));
+  state.specConfirmed = !dims.hasSpec || dims.skuMap.has(`${state.selectedCap}||${state.selectedWarranty}`);
+  state.preMatchedNotice = '';
+  render();
+}
+
+function selectCap(c) {
+  const m = getModel(state.detailModelId);
+  const dims = parseModelDimensions(m);
+  state.selectedCap = c;
+  if (dims.warranties.length && !dims.skuMap.has(`${c}||${state.selectedWarranty}`)) {
+    state.selectedWarranty = dims.skuMap.has(`${c}||无保`)
+      ? '无保'
+      : (dims.warranties.find(w => dims.skuMap.has(`${c}||${w}`)) || dims.warranties[0]);
+  }
+  state.preMatchedNotice = '';
+  state.specConfirmed = true;
+  if (state.recent[0] && state.recent[0].modelId === m[0]) {
+    state.recent[0].cap = state.selectedCap;
+    state.recent[0].warranty = state.selectedWarranty;
+  }
+  render();
+}
+function selectWarranty(w) {
+  const m = getModel(state.detailModelId);
+  const dims = parseModelDimensions(m);
+  state.selectedWarranty = w;
+  if (dims.caps.length && !dims.skuMap.has(`${state.selectedCap}||${w}`)) {
+    state.selectedCap = dims.caps.find(c => dims.skuMap.has(`${c}||${w}`)) || dims.caps[0];
+  }
+  state.preMatchedNotice = '';
+  state.specConfirmed = true;
+  if (state.recent[0] && state.recent[0].modelId === m[0]) {
+    state.recent[0].cap = state.selectedCap;
+    state.recent[0].warranty = state.selectedWarranty;
+  }
+  render();
+}
+
+/* Page 5: Recent Queries */
+function renderRecent() {
+  window._clearRecent = () => openDialog('清空最近查询', '确定清空当前账号的最近查询记录吗？', [
+    { label: '取消' },
+    { label: '清空', warn: true, onClick: () => { state.recent = []; showToptips('已清空', 'info'); render(); } }
+  ]);
+  return `
+    <div class="ui-section-hd">
+      <span>点选记录拉取最新报价</span>
+      ${state.recent.length ? `<a href="javascript:;" style="color:var(--price-red);text-decoration:none;" onclick="window._clearRecent()">清空</a>` : ''}
+    </div>
+    <div class="ui-card" style="margin-top:0;">
+      <div class="weui-cells">
+        ${state.recent.map(r => {
+          const m = getModel(r.modelId);
+          const b = getBrandObj(m[2]);
+          const sp = [r.cap, r.warranty].filter(Boolean).join(' · ');
+          const meta = [hasBrandInName(m[4], b.name) ? '' : b.name, sp, r.time].filter(Boolean).join(' · ');
+          return `
+            <div class="weui-cell compact-cell" style="cursor:pointer;" onclick="navigate('model-detail', { modelId:${m[0]}, cap:'${esc(r.cap || '')}', warranty:'${esc(r.warranty || '')}' })">
+              <div class="weui-cell__hd" style="margin-right:10px;">${renderBrandLogo(b, 'sm')}</div>
+              <div class="weui-cell__bd">
+                <p class="model-name-txt">${esc(m[4])}</p>
+                <p class="model-meta-txt">${esc(meta)}</p>
+              </div>
+              <div class="weui-cell__ft">
+                <a href="javascript:;" style="color:var(--ink-3);font-size:13px;padding:6px;text-decoration:none;" onclick="event.stopPropagation();state.recent=state.recent.filter(x=>x.id!=='${r.id}');render()">删除</a>
+              </div>
+            </div>
+          `;
+        }).join('') || `<div class="weui-loadmore weui-loadmore_line" style="margin:24px auto;"><span class="weui-loadmore__tips">暂无最近查询记录</span></div>`}
+      </div>
+    </div>
+  `;
+}
+
+/* Page 6: Feedback */
+function renderFeedback() {
+  if (state.feedbackSubmitted) {
+    return `
+      <div class="ui-card" style="margin-top:16px;padding:40px 20px;text-align:center;">
+        <i class="weui-icon-success weui-icon_msg"></i>
+        <h2 style="font-size:18px;font-weight:600;color:var(--ink-1);margin:16px 0 8px;">提交成功</h2>
+        <p style="font-size:13.5px;color:var(--ink-2);line-height:1.6;margin:0 0 24px;">感谢反馈，管理员核实后将补充进标准型号库与报价表。</p>
+        <a href="javascript:;" class="ui-btn ui-btn-primary ui-btn-block" onclick="navigate('index')">返回首页</a>
+      </div>
+    `;
+  }
+  const types = [
+    { id: 'missing_model', label: '机型未收录' },
+    { id: 'price_question', label: '报价疑问' },
+    { id: 'spec_issue', label: '规格 / 档位缺失' },
+    { id: 'other', label: '其他建议' },
+  ];
+  return `
+    <div class="ui-section-hd"><span>反馈类型</span></div>
+    <div class="ui-card" style="margin-top:0;">
+      <div class="weui-cells weui-cells_radio">
+        ${types.map(t => `
+          <label class="weui-cell weui-cell_active weui-check__label compact-cell" onclick="state.feedbackType='${t.id}';render()">
+            <div class="weui-cell__bd"><p style="font-size:15px;">${t.label}</p></div>
+            <div class="weui-cell__ft"><input type="radio" class="weui-check" name="fbType" ${state.feedbackType === t.id ? 'checked' : ''} /><span class="weui-icon-checked"></span></div>
+          </label>
+        `).join('')}
+      </div>
+    </div>
+
+    <div class="ui-section-hd"><span>具体说明</span></div>
+    <div class="ui-card" style="margin-top:0;padding:12px 14px;">
+      <textarea class="weui-textarea" style="font-size:14.5px;line-height:1.5;" maxlength="200" rows="3" placeholder="请填写机型名、型号代码或具体疑问" oninput="state.feedbackText=this.value;document.getElementById('fbCount').textContent=this.value.length+'/200'">${esc(state.feedbackText)}</textarea>
+      <div class="weui-textarea-counter" id="fbCount" style="font-size:12px;">${state.feedbackText.length}/200</div>
+    </div>
+
+    <div class="ui-section-hd"><span>补充照片（可选）</span></div>
+    <div class="ui-card" style="margin-top:0;padding:12px 14px;">
+      <div class="weui-uploader">
+        <div class="weui-uploader__hd" style="padding-bottom:8px;"><p class="weui-uploader__title" style="font-size:14px;color:var(--ink-2);">最多上传 3 张</p><div class="weui-uploader__info" style="font-size:12.5px;">${state.feedbackImages.length}/3</div></div>
+        <div class="weui-uploader__bd">
+          <ul class="weui-uploader__files">
+            ${state.feedbackImages.map((_, i) => `<li class="weui-uploader__file" style="border-radius:8px;background:var(--bg-subtle);display:flex;align-items:center;justify-content:center;font-size:12.5px;color:var(--ink-2);" onclick="state.feedbackImages.splice(${i},1);render()">图 ${i+1}</li>`).join('')}
+          </ul>
+          ${state.feedbackImages.length < 3 ? `<div class="weui-uploader__input-box" style="border-radius:8px;" onclick="state.feedbackImages.push('img');render()"></div>` : ''}
+        </div>
+      </div>
+    </div>
+
+    <div style="padding:18px 12px 28px;">
+      <a href="javascript:;" class="ui-btn ui-btn-primary ui-btn-block" onclick="state.feedbackSubmitted=true;render()">提交反馈</a>
+    </div>
+  `;
+}
+
+/* Page 7: Mine */
+function renderMine() {
+  const u = state.user;
+  const activeBook = getActiveBook();
+  const canSwitch = getAuthorizedBooks().length >= 2;
+  return `
+    <div class="ui-card">
+      <div class="mine-profile">
+        <div class="mine-avatar" style="background:${u.loggedIn ? 'var(--brand)' : 'var(--bg-subtle)'};color:${u.loggedIn ? '#FFF' : 'var(--ink-3)'};">
+          ${u.loggedIn ? esc(u.nickname[0]) : '微'}
+        </div>
+        <div style="flex:1;min-width:0;">
+          ${u.loggedIn ? `
+            <div style="font-size:17px;font-weight:700;color:var(--ink-1);line-height:1.3;">${esc(u.nickname)}</div>
+            <div class="mine-code-pill" onclick="copyText('${u.inviteCode}','推荐码已复制')">
+              <span>推荐码</span><strong>${esc(u.inviteCode)}</strong>${SVG.copy}
+            </div>
+            ${u.invitedBy ? `<div style="margin-top:4px;font-size:12px;color:var(--ink-3);">推荐人：${esc(u.invitedBy)}</div>` : ''}
+          ` : `
+            <div style="font-size:16.5px;font-weight:600;color:var(--ink-1);">微信一键登录</div>
+            <div style="margin-top:3px;font-size:12.5px;color:var(--ink-2);">同步最近查询${state.pendingInviterCode ? ` · 绑定 ${esc(state.pendingInviterCode)}` : ''}</div>
+          `}
+        </div>
+        ${!u.loggedIn ? `<button type="button" class="ui-btn ui-btn-primary" style="min-height:34px;padding:6px 14px;font-size:13.5px;border-radius:8px;" onclick="loginWeChat()">登录</button>` : ''}
+      </div>
+    </div>
+
+    ${u.loggedIn ? `
+      <div class="ui-card">
+        <div class="weui-cells">
+          <a href="javascript:;" class="weui-cell weui-cell_access compact-cell" onclick="openInviteDialog()">
+            <div class="weui-cell__bd">
+              <p class="model-name-txt">邀请同行使用</p>
+              <p class="model-meta-txt">已直推 ${u.referrals.length} 位同行（仅一级推荐）</p>
+            </div>
+            <div class="weui-cell__ft" style="font-size:13px;color:var(--ink-2);">明细</div>
+          </a>
+          ${u.canManageContact ? (() => {
+            const parts = [u.contactPhone ? '手机号' : '', u.contactWechatQr ? '微信码' : ''].filter(Boolean);
+            const hasAny = parts.length > 0;
+            const sub = hasAny
+              ? (u.showContactToInvitees !== false ? `${parts.join(' + ')} · 展示在直推下级首页` : `${parts.join(' + ')} · 暂不对下级展示`)
+              : '可填写手机号与上传微信二维码';
+            return `
+              <a href="javascript:;" class="weui-cell weui-cell_access compact-cell" onclick="openContactSettingDialog()">
+                <div class="weui-cell__bd">
+                  <p class="model-name-txt">我的联系方式</p>
+                  <p class="model-meta-txt">${esc(sub)}</p>
+                </div>
+                <div class="weui-cell__ft" style="font-size:13px;color:${hasAny ? 'var(--brand)' : 'var(--ink-3)'};font-weight:${hasAny ? '500' : '400'};">${hasAny ? '已设置' : '未填写'}</div>
+              </a>
+            `;
+          })() : ''}
+        </div>
+      </div>
+    ` : ''}
+
+    <div class="ui-card">
+      <div class="weui-cells">
+        ${canSwitch ? `
+          <a href="javascript:;" class="weui-cell weui-cell_access compact-cell" onclick="openPriceBookActionSheet()">
+            <div class="weui-cell__bd"><p class="model-name-txt">显示价格设置</p></div>
+            <div class="weui-cell__ft" style="font-size:13.5px;color:var(--brand);font-weight:500;">${esc(activeBook.name)}</div>
+          </a>
+        ` : ''}
+        <a href="javascript:;" class="weui-cell weui-cell_access compact-cell" onclick="navigate('recent')">
+          <div class="weui-cell__bd"><p class="model-name-txt">最近查询</p></div>
+          <div class="weui-cell__ft" style="font-size:13px;color:var(--ink-2);">${state.recent.length} 条</div>
+        </a>
+        <a href="javascript:;" class="weui-cell weui-cell_access compact-cell" onclick="navigate('feedback')">
+          <div class="weui-cell__bd"><p class="model-name-txt">反馈与建议</p></div>
+          <div class="weui-cell__ft" style="font-size:13px;color:var(--ink-2);">报错 / 未收录</div>
+        </a>
+        <a href="javascript:;" class="weui-cell weui-cell_access compact-cell" onclick="openDialog('联系客服','微信客服：recycle_kefu（09:00-21:00）<br/>支持人工成色核价与故障机询价。',[{label:'知道了',primary:true}])">
+          <div class="weui-cell__bd"><p class="model-name-txt">联系客服</p></div>
+          <div class="weui-cell__ft" style="font-size:13px;color:var(--ink-2);">人工核价</div>
+        </a>
+        <a href="javascript:;" class="weui-cell weui-cell_access compact-cell" onclick="openDialog('用户协议与隐私保护说明','1. 本工具提供回收行情参考，不记录买卖交易或资金流水。<br/>2. 一级推荐关系仅在首次注册时绑定，不可修改。<br/>3. 退出登录将自动清除本地离线报价缓存。',[{label:'知道了',primary:true}])">
+          <div class="weui-cell__bd"><p class="model-name-txt">协议与隐私说明</p></div>
+          <div class="weui-cell__ft"></div>
+        </a>
+      </div>
+    </div>
+
+    ${u.loggedIn ? `<div style="padding:18px 12px 28px;"><a href="javascript:;" class="ui-btn ui-btn-block" style="background:var(--bg-surface);color:var(--ink-2);font-weight:500;" onclick="logoutWeChat()">退出登录</a></div>` : ''}
+  `;
+}
+
+function loginWeChat() {
+  state.user.loggedIn = true;
+  if (state.pendingInviterCode && !state.user.invitedBy) {
+    state.user.invitedBy = `推荐人(${state.pendingInviterCode})`;
+    state.user.invitedByCode = state.pendingInviterCode;
+    showToptips(`首次注册成功，已绑定一级推荐码 ${state.pendingInviterCode}`, 'success');
+    state.pendingInviterCode = '';
+  } else {
+    state.pendingInviterCode = '';
+    showToptips('登录成功', 'success');
+  }
+  render();
+}
+function logoutWeChat() {
+  state.user.loggedIn = false;
+  state.user.allowPublicBooks = true;
+  state.user.grantedBookIds = [];
+  state.user.preferredBookId = 'channel';
+  state.recent = [];
+  state.searchHistory = [];
+  closeHalfDialog();
+  showToptips('已退出并清空缓存', 'info');
+  render();
+}
+
+/* ==================== CONSOLE ==================== */
+function openAppleSpecDemo() {
+  const m = RAW.models.find(x => x[1] === 0 && getBrandObj(x[2]).name === '苹果' && x[4].toLowerCase().includes('16 pro max')) || RAW.models[0];
+  navigate('model-detail', { modelId: m[0] });
+}
+function openPausedDemo() {
+  const m = RAW.models.find(x => x[4].includes('暂停回收示例')) || RAW.models[RAW.models.length - 1];
+  navigate('model-detail', { modelId: m[0] });
+}
+function jumpBrandTest(cat, brandName) {
+  const idx = getBrandIdxByName(brandName);
+  navigate('quotes', { cat, brandIdx: idx >= 0 ? idx : 0 });
+}
+function applyPreset(key) {
+  state.presetKey = key;
+  state.user = JSON.parse(JSON.stringify(PERM_PRESETS[key].user));
+  state.recent = [];
+  state.searchHistory = [];
+  if (state.focusCard) closeHalfDialog();
+  showToptips(`测试账号：${PERM_PRESETS[key].label}`, 'info');
+  render();
+}
+function toggleOffline() {
+  state.offline = !state.offline;
+  if (!state.offline && state.pendingPriceOffset) {
+    state.priceOffset += state.pendingPriceOffset;
+    state.pendingPriceOffset = 0;
+  }
+  document.getElementById('btnOffline').classList.toggle('active', state.offline);
+  showToptips(state.offline ? '已断网：历史报价模式（客户展示卡同步提示）' : '已恢复联网', state.offline ? 'warn' : 'success');
+  render();
+}
+function toggleExpired() {
+  state.expired = !state.expired;
+  document.getElementById('btnExpired').classList.toggle('active', state.expired);
+  showToptips(state.expired ? '已切换报价过期态（客户展示卡同步更新）' : '报价已恢复有效', state.expired ? 'warn' : 'success');
+  render();
+}
+function simulateLivePriceUpdate() {
+  if (state.offline) {
+    state.pendingPriceOffset += 100;
+    showToptips('后台已调价，联网后更新；当前仍为历史报价', 'info');
+    return;
+  }
+  state.priceOffset += 100;
+  showToptips('报价已更新（+100元，客户展示卡已实时同步）', 'success');
+  render();
+}
+function simulateRevokeStallBook() {
+  const idx = state.user.grantedBookIds.indexOf('stall_buy');
+  if (idx === -1) { showToptips('当前账号无「摆摊收机价」权限', 'info'); return; }
+  state.user.grantedBookIds.splice(idx, 1);
+  const wasUsingRevoked = state.user.preferredBookId === 'stall_buy';
+  if (wasUsingRevoked) {
+    state.user.preferredBookId = getAuthorizedBooks()[0]?.id || '';
+  }
+  if (state.focusCard) {
+    closeHalfDialog();
+    showToptips('价目权限已撤回，已自动退出客户展示卡并降级默认价格', 'warn');
+  } else {
+    showToptips('后台已收回「摆摊收机价」，自动降级默认价目表', 'warn');
+  }
+  render();
+}
+function simulateReferralRegister() {
+  state.pendingInviterCode = 'T8K92M';
+  state.user.loggedIn = false;
+  state.user.invitedBy = '';
+  navigate('mine');
+  showToptips('模拟携带推荐码 T8K92M 进入，点「登录」绑定一级推荐', 'info');
+}
+function setViewport(w) {
+  state.viewport = w;
+  document.documentElement.style.setProperty('--phone-width', w + 'px');
+  document.getElementById('btnW375').classList.toggle('active', w === 375);
+  document.getElementById('btnW320').classList.toggle('active', w === 320);
+}
+function toggleLargeFont() {
+  state.largeFont = !state.largeFont;
+  document.getElementById('phoneScreen').classList.toggle('large-font', state.largeFont);
+  document.getElementById('btnLargeFont').classList.toggle('active', state.largeFont);
+}
+
+function renderConsole() {
+  document.getElementById('datasetSummary').textContent = `${RAW.stats.models} 款 / ${RAW.stats.brands} 品牌`;
+  document.getElementById('permControls').innerHTML = Object.keys(PERM_PRESETS).map(k => `
+    <button class="ctrl-btn ${state.presetKey === k ? 'active' : ''}" onclick="applyPreset('${k}')">${PERM_PRESETS[k].label}</button>
+  `).join('');
+
+  const pages = [
+    ['index', '1.首页'], ['quotes', '2.报价表'], ['mine', '3.我的'],
+    ['search', '4.搜索'], ['model-detail', '5.详情'], ['recent', '6.最近'], ['feedback', '7.反馈'],
+  ];
+  document.getElementById('pageJumpControls').innerHTML = pages.map(([id, label]) => `
+    <button class="ctrl-btn ${state.page === id ? 'active' : ''}" onclick="navigate('${id}')">${label}</button>
+  `).join('');
+
+  const books = getAuthorizedBooks();
+  const active = getActiveBook();
+  document.getElementById('stateInspector').textContent = JSON.stringify({
+    page: state.page,
+    remembered_lastCat: state.lastCat === 1 ? '环保机回收' : '靓机回收',
+    spec_confirmed: [state.selectedCap || '未选容量', state.selectedWarranty || '未选保修(如适用)'],
+    focus_card_open: !!state.focusCard,
+    offline: state.offline,
+    expired: state.expired,
+    authorized_books: books.map(b => b.name),
+    active_book: active ? active.name : '暂无可用报价',
+  }, null, 2);
+}
+
+function render() {
+  renderChrome();
+  const map = {
+    'index': renderIndex, 'quotes': renderQuotes, 'mine': renderMine,
+    'search': renderSearch, 'model-detail': renderModelDetail,
+    'recent': renderRecent, 'feedback': renderFeedback,
+  };
+  document.getElementById('pageBody').innerHTML = map[state.page]();
+  if (state.page === 'quotes') {
+    document.getElementById('quotesRightScroll').scrollTop = state.quotesRightScroll;
+    document.getElementById('brandRail').scrollTop = state.brandRailScroll;
+  }
+  if (state.focusCard) renderFocusCard();
+  if (state.page === 'search' && state.shouldFocusSearch) {
+    state.shouldFocusSearch = false;
+    setTimeout(() => {
+      const el = document.getElementById('searchInput');
+      if (el) el.focus();
+    }, 30);
+  }
+  renderConsole();
+}
+
+if (typeof location !== 'undefined' && typeof document !== 'undefined' && document.body && /[?&]debug=1(?:&|$)/.test(location.search || '')) {
+  document.body.classList.add('show-debug');
+}
+render();
+</script>
+</body>
+</html>
