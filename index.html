@@ -343,6 +343,27 @@
   .home-cat-name { font-size: 15px; font-weight: 600; color: var(--ink-1); line-height: 1.3; }
   .home-cat-desc { font-size: 12px; color: var(--ink-2); line-height: 1.35; margin-top: 2px; }
 
+  /* Compact 3-Col Digital Categories Row (Laptop / Camera / Tablet) */
+  .home-digital-row {
+    margin: 8px 12px 0;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+  }
+  .home-digital-tile {
+    background: var(--bg-surface); border-radius: 11px;
+    padding: 10px 8px; text-decoration: none;
+    display: flex; flex-direction: column; align-items: center; gap: 5px;
+    border: 1px solid transparent; transition: background-color 0.12s ease, border-color 0.12s ease;
+  }
+  .home-digital-tile:active { background: var(--bg-subtle); }
+  .home-digital-tile.is-active { border-color: var(--brand-border); background: linear-gradient(180deg, rgba(7,193,96,0.05) 0%, #FFFFFF 100%); }
+  .home-digital-ico {
+    width: 30px; height: 30px; border-radius: 8px; background: var(--bg-subtle);
+    color: var(--ink-1); display: flex; align-items: center; justify-content: center;
+  }
+  .home-digital-tile.is-active .home-digital-ico { background: var(--brand-tint); color: var(--brand); }
+  .home-digital-name { font-size: 13px; font-weight: 600; color: var(--ink-1); line-height: 1.25; }
+  .home-digital-sub { font-size: 10.5px; color: var(--ink-3); line-height: 1.2; }
+
   /* Segmented inline switcher (Home Brand Header) */
   .seg-pill {
     display: inline-flex; align-items: center; padding: 2px;
@@ -372,11 +393,13 @@
   .quotes-root { display: flex; flex-direction: column; height: 100%; background: var(--bg-surface); }
   .quotes-tabs {
     display: flex; align-items: center; background: var(--bg-surface);
-    border-bottom: 0.5px solid var(--hairline); flex-shrink: 0; padding: 0 8px;
+    border-bottom: 0.5px solid var(--hairline); flex-shrink: 0; padding: 0 4px;
+    overflow-x: auto;
   }
+  .quotes-tabs::-webkit-scrollbar { display: none; }
   .quotes-tab {
-    flex: 1; text-align: center; padding: 11px 8px; font-size: 15px; font-weight: 500;
-    color: var(--ink-2); cursor: pointer; position: relative; transition: color 0.12s ease;
+    flex: 1; min-width: max-content; text-align: center; padding: 10px 6px; font-size: 13.5px; font-weight: 500;
+    color: var(--ink-2); cursor: pointer; position: relative; transition: color 0.12s ease; white-space: nowrap;
   }
   .quotes-tab.active { color: var(--ink-1); font-weight: 600; }
   .quotes-tab.active::after {
@@ -418,6 +441,126 @@
     border-bottom: 0.5px solid var(--hairline);
   }
   .h-scroll-bar::-webkit-scrollbar { display: none; }
+
+  /* Detail Page: Multi-Image Swipeable Banner (<swiper> parity) */
+  .detail-banner {
+    position: relative; height: 152px; background: #E2E5E9;
+    overflow: hidden; border-bottom: 0.5px solid var(--hairline);
+    user-select: none;
+  }
+  .banner-track {
+    display: flex; width: 100%; height: 100%;
+    overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+  .banner-track::-webkit-scrollbar { display: none; }
+  .banner-slide {
+    flex: 0 0 100%; width: 100%; height: 100%; scroll-snap-align: start;
+    display: flex; align-items: center; justify-content: center;
+    cursor: zoom-in; position: relative; background: #E2E5E9;
+  }
+  .banner-slide img {
+    width: 100%; height: 100%; object-fit: contain; display: block;
+    pointer-events: none;
+  }
+  .banner-angle-pill {
+    position: absolute; left: 10px; bottom: 9px; z-index: 4;
+    padding: 2px 8px; border-radius: 999px;
+    background: rgba(17, 24, 39, 0.56); color: #FFFFFF;
+    font-size: 11px; font-weight: 500; line-height: 1.4;
+    backdrop-filter: blur(4px); pointer-events: none;
+  }
+  .banner-count-pill {
+    position: absolute; right: 10px; bottom: 9px; z-index: 4;
+    padding: 2px 8px; border-radius: 999px;
+    background: rgba(17, 24, 39, 0.56); color: #FFFFFF;
+    font-size: 11px; font-weight: 600; font-variant-numeric: tabular-nums; line-height: 1.4;
+    backdrop-filter: blur(4px); pointer-events: none;
+  }
+  .banner-dots {
+    position: absolute; left: 50%; bottom: 11px; transform: translateX(-50%); z-index: 4;
+    display: flex; align-items: center; gap: 5px; pointer-events: none;
+  }
+  .banner-dot {
+    width: 5px; height: 5px; border-radius: 99px;
+    background: rgba(0, 0, 0, 0.22); transition: width 0.16s ease, background-color 0.16s ease;
+  }
+  .banner-dot.active { width: 14px; background: var(--brand); }
+  .banner-arrow {
+    position: absolute; top: 50%; transform: translateY(-50%); z-index: 5;
+    width: 28px; height: 28px; border-radius: 50%; border: none;
+    background: rgba(255, 255, 255, 0.85); color: var(--ink-1);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; padding: 0; font-size: 15px; line-height: 1;
+    transition: opacity 0.12s ease, background-color 0.12s ease;
+  }
+  .banner-arrow:active { background: #FFFFFF; }
+  .banner-arrow.prev { left: 8px; }
+  .banner-arrow.next { right: 8px; }
+
+  /* Fullscreen Lightbox Preview with Zoom & Pan (wx.previewImage parity) */
+  .banner-lightbox {
+    position: fixed; inset: 0; z-index: 5200;
+    background: rgba(0, 0, 0, 0.95); color: #FFFFFF;
+    display: flex; flex-direction: column; justify-content: space-between;
+    user-select: none;
+  }
+  .banner-lb-hd {
+    padding: 46px 14px 10px; display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    font-size: 14px; font-weight: 500;
+  }
+  .banner-lb-close {
+    width: 34px; height: 34px; border-radius: 50%; border: none; flex-shrink: 0;
+    background: rgba(255, 255, 255, 0.16); color: #FFFFFF; font-size: 18px;
+    cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
+  }
+  .banner-lb-stage {
+    flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden; padding: 12px; touch-action: none;
+  }
+  .banner-lb-stage img {
+    max-width: 100%; max-height: 100%; border-radius: 10px; object-fit: contain;
+    transform-origin: center center; transition: transform 0.16s ease;
+    cursor: zoom-in; will-change: transform;
+  }
+  .banner-lb-stage img.is-zoomed { cursor: grab; }
+  .banner-lb-stage img.is-dragging { transition: none; cursor: grabbing; }
+  .banner-lb-tip {
+    text-align: center; font-size: 11.5px; color: rgba(255, 255, 255, 0.52);
+    padding: 0 12px 6px;
+  }
+  .banner-lb-ft {
+    padding: 6px 14px max(22px, env(safe-area-inset-bottom));
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    font-size: 13px; color: rgba(255, 255, 255, 0.85);
+  }
+  .banner-lb-btn {
+    padding: 6px 12px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.24);
+    background: rgba(255, 255, 255, 0.1); color: #FFFFFF; font-size: 12.5px; cursor: pointer;
+  }
+  .banner-lb-btn:active { background: rgba(255, 255, 255, 0.22); }
+  .banner-lb-zoom {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(255, 255, 255, 0.1); border-radius: 999px; padding: 3px 6px;
+  }
+  .banner-lb-zbtn {
+    width: 26px; height: 26px; border-radius: 50%; border: none;
+    background: rgba(255, 255, 255, 0.16); color: #FFFFFF; font-size: 15px; font-weight: 600;
+    cursor: pointer; display: inline-flex; align-items: center; justify-content: center; line-height: 1;
+  }
+  .banner-lb-zval {
+    min-width: 38px; text-align: center; font-size: 12px; font-variant-numeric: tabular-nums; cursor: pointer;
+  }
+
+  /* List Max Price (Guji-style PriceMax in outer lists) */
+  .list-max-price {
+    display: inline-flex; align-items: baseline; gap: 2px;
+    font-variant-numeric: tabular-nums; white-space: nowrap;
+  }
+  .list-max-label { font-size: 11px; font-weight: 400; color: var(--ink-3); margin-right: 1px; }
+  .list-max-yen { font-size: 11.5px; font-weight: 600; color: var(--price-red); }
+  .list-max-num { font-size: 15px; font-weight: 700; color: var(--price-red); letter-spacing: -0.02em; }
 
   /* Detail Page: Single-Screen Precision Layout */
   .detail-wrap { min-height: 100%; display: flex; flex-direction: column; }
@@ -665,6 +808,9 @@
             <div class="weui-dialog__ft" id="dialogActions"></div>
           </div>
         </div>
+
+        <!-- Fullscreen Image Preview Lightbox (wx.previewImage simulation) -->
+        <div id="bannerPreviewWrap" style="display:none;"></div>
       </div>
     </div>
   </div>
@@ -775,6 +921,9 @@ const SVG = {
   qr: `<svg width="13" height="13" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="2.5" width="5.5" height="5.5" rx="1"/><rect x="12" y="2.5" width="5.5" height="5.5" rx="1"/><rect x="2.5" y="12" width="5.5" height="5.5" rx="1"/><path d="M12 12h2.5v2.5H12zM16.5 12v5.5M12 17.5h2.5"/></svg>`,
   ecoPhone: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M9.5 11.5l1.8 1.8 3.5-3.8"/><path d="M10.5 18h3"/></svg>`,
   mintPhone: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M12 7.5l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8.8-2.2z"/><path d="M10.5 18h3"/></svg>`,
+  laptop: `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="11" rx="2"/><path d="M2 19h20"/></svg>`,
+  camera: `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8.5A2 2 0 0 1 6 6.5h2l1.3-2h5.4l1.3 2h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-9z"/><circle cx="12" cy="13" r="3.2"/></svg>`,
+  tablet: `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="3" width="15" height="18" rx="2.2"/><path d="M10.5 17.5h3"/></svg>`,
   tabHome: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5L12 4l8 6.5V19a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 19v-8.5z"/><path d="M9.5 20.5V14h5v6.5"/></svg>`,
   tabQuotes: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="3.5" width="15" height="17" rx="2.5"/><path d="M8.5 8.5h7M8.5 12.5h7M8.5 16.5h4.5"/></svg>`,
   tabMine: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 19.5c1.5-3.2 4-4.5 7-4.5s5.5 1.3 7 4.5"/></svg>`,
@@ -965,13 +1114,19 @@ function openContactSettingDialog() {
 function loadSavedCat() {
   try {
     const v = localStorage.getItem('recycle_last_cat');
-    if (v === '0' || v === '1') return Number(v);
+    if (['0', '1', '2', '3', '4'].includes(v)) return Number(v);
   } catch (e) {}
   return 1; // default: 环保机回收
 }
 function saveLastCat(cat) {
   state.lastCat = cat;
+  if (cat === 0 || cat === 1) state.lastPhoneCat = cat;
   try { localStorage.setItem('recycle_last_cat', String(cat)); } catch (e) {}
+}
+function getCatMeta(catId) {
+  const found = (RAW.categories || []).find(c => c.id === catId);
+  if (found) return { id: found.id, name: found.name, short: found.short || found.name.replace(/回收$/, '') };
+  return { id: catId, name: catId === 0 ? '靓机回收' : '环保机回收', short: catId === 0 ? '靓机' : '环保机' };
 }
 
 const initialCat = loadSavedCat();
@@ -990,8 +1145,9 @@ const state = {
   viewport: 375,
   largeFont: false,
   pendingInviterCode: '',
-  // Remembered last category (1=环保机回收, 0=靓机回收)
+  // Remembered last category (1=环保机, 0=靓机, 2=笔记本, 3=相机, 4=平板)
   lastCat: initialCat,
+  lastPhoneCat: (initialCat === 0 || initialCat === 1) ? initialCat : 1,
   // Search
   searchQuery: '',
   searchBrandIdx: -1,
@@ -1053,6 +1209,241 @@ function fmtMoney(n) { return '¥' + Number(n).toLocaleString('zh-CN'); }
 function fmtPriceHtml(n) { return `<span class="price-yen">¥</span>${Number(n).toLocaleString('zh-CN')}`; }
 function hasBrandInName(modelName, brandName) {
   return String(modelName).toLowerCase().includes(String(brandName).toLowerCase());
+}
+
+/* Compute highest valid price for a model under active price book (Guji-style PriceMax in lists) */
+function getModelMaxPriceInfo(m, book, preferredCap = '') {
+  if (!book) return { state: 'none', amt: null };
+  if (state.expired) return { state: 'expired', amt: null };
+  let maxAmt = null;
+  let hasPaused = false;
+  let hasInquiry = false;
+  const skus = m[7] || [];
+  const filteredSkus = preferredCap
+    ? skus.filter(s => s[0] === preferredCap || s[0].startsWith(preferredCap + ' · '))
+    : skus;
+  const targetSkus = filteredSkus.length ? filteredSkus : skus;
+  for (const sku of targetSkus) {
+    for (const [, baseVal, st] of (sku[1] || [])) {
+      if (st === 0 && baseVal != null) {
+        const val = calcBookPrice(baseVal, book);
+        if (val != null && (maxAmt === null || val > maxAmt)) maxAmt = val;
+      } else if (st === 2) {
+        hasPaused = true;
+      } else if (st === 3) {
+        hasInquiry = true;
+      }
+    }
+  }
+  if (maxAmt !== null) return { state: 'normal', amt: maxAmt };
+  if (hasPaused) return { state: 'paused', amt: null };
+  if (hasInquiry) return { state: 'inquiry', amt: null };
+  return { state: 'muted', amt: null };
+}
+function renderListMaxPriceHtml(m, preferredCap = '') {
+  const book = getActiveBook();
+  const info = getModelMaxPriceInfo(m, book, preferredCap);
+  if (info.state === 'normal') {
+    return `<span class="list-max-price"><span class="list-max-label">最高</span><span class="list-max-yen">¥</span><span class="list-max-num">${Number(info.amt).toLocaleString('zh-CN')}</span></span>`;
+  }
+  if (info.state === 'expired') return `<span class="state-tag state-tag_expired" style="font-size:11.5px;padding:2px 6px;">已过期</span>`;
+  if (info.state === 'paused') return `<span class="state-tag state-tag_paused" style="font-size:11.5px;padding:2px 6px;">暂停回收</span>`;
+  if (info.state === 'inquiry') return `<span class="state-tag state-tag_inquiry" style="font-size:11.5px;padding:2px 6px;">人工询价</span>`;
+  return '';
+}
+
+/* Multi-image reference gallery per model (maps to model_ref_image in production) */
+function getModelBannerImages(m) {
+  const b = getBrandObj(m[2]);
+  if (m[1] === 2) {
+    return [
+      { src: 'images/laptop_front.jpg', label: '机身外观参考' },
+      { src: 'images/tablet_front.jpg', label: '屏幕与边框参考' },
+    ];
+  }
+  if (m[1] === 3) {
+    return [
+      { src: 'images/camera_front.jpg', label: '机身与镜头外观' },
+      { src: 'images/iphone_detail.jpg', label: '卡口与细节参考' },
+    ];
+  }
+  if (m[1] === 4) {
+    return [
+      { src: 'images/tablet_front.jpg', label: '正面与中框外观' },
+      { src: 'images/iphone_back.jpg', label: '背面成色参考' },
+    ];
+  }
+  if (b.name === '苹果') {
+    return [
+      { src: 'images/iphone_back.jpg', label: '背面参考图' },
+      { src: 'images/iphone_front.jpg', label: '正面外观' },
+      { src: 'images/iphone_detail.jpg', label: '镜头与边框细节' },
+    ];
+  }
+  return [
+    { src: 'images/android_back.jpg', label: '背面参考图' },
+    { src: 'images/android_front.jpg', label: '正面外观' },
+  ];
+}
+let detailBannerIdx = 0;
+let previewState = null;
+function syncBannerIndicators(idx, total, imgs) {
+  detailBannerIdx = idx;
+  const countEl = document.getElementById('bannerCountPill');
+  if (countEl) countEl.textContent = `${idx + 1} / ${total}`;
+  const angleEl = document.getElementById('bannerAnglePill');
+  if (angleEl && imgs[idx]) angleEl.textContent = imgs[idx].label;
+  for (let i = 0; i < total; i++) {
+    const dot = document.getElementById(`bannerDot_${i}`);
+    if (dot) dot.classList.toggle('active', i === idx);
+  }
+}
+function onBannerScroll(el) {
+  const m = getModel(state.detailModelId);
+  const imgs = getModelBannerImages(m);
+  const w = el.clientWidth || 1;
+  const idx = Math.max(0, Math.min(imgs.length - 1, Math.round(el.scrollLeft / w)));
+  if (idx !== detailBannerIdx) syncBannerIndicators(idx, imgs.length, imgs);
+}
+function stepDetailBanner(delta) {
+  const m = getModel(state.detailModelId);
+  const imgs = getModelBannerImages(m);
+  const next = (detailBannerIdx + delta + imgs.length) % imgs.length;
+  const track = document.getElementById('detailBannerTrack');
+  if (track) track.scrollTo({ left: next * track.clientWidth, behavior: 'smooth' });
+  syncBannerIndicators(next, imgs.length, imgs);
+}
+function openBannerPreview(modelId, idx = 0) {
+  const m = getModel(modelId);
+  const imgs = getModelBannerImages(m);
+  previewState = {
+    modelId,
+    idx: Math.max(0, Math.min(imgs.length - 1, idx)),
+    imgs,
+    name: m[4],
+    scale: 1,
+    tx: 0,
+    ty: 0,
+    dragging: false,
+    moved: false,
+    startX: 0,
+    startY: 0,
+    pinchStartDist: 0,
+    pinchStartScale: 1,
+  };
+  renderBannerPreview();
+}
+function applyPreviewTransform() {
+  const img = document.getElementById('bannerPreviewImg');
+  const zval = document.getElementById('bannerZoomVal');
+  if (!previewState) return;
+  if (img) {
+    img.style.transform = `translate3d(${previewState.tx}px, ${previewState.ty}px, 0) scale(${previewState.scale})`;
+    img.classList.toggle('is-zoomed', previewState.scale > 1.02);
+    img.classList.toggle('is-dragging', previewState.dragging);
+  }
+  if (zval) zval.textContent = `${Math.round(previewState.scale * 100)}%`;
+}
+function setBannerZoom(nextScale) {
+  if (!previewState) return;
+  const clamped = Math.max(1, Math.min(3.5, Math.round(nextScale * 10) / 10));
+  previewState.scale = clamped;
+  if (clamped <= 1.02) { previewState.tx = 0; previewState.ty = 0; }
+  applyPreviewTransform();
+}
+function toggleBannerZoom() {
+  if (!previewState) return;
+  if (previewState.moved) { previewState.moved = false; return; }
+  const next = previewState.scale < 1.8 ? 2 : previewState.scale < 2.8 ? 3 : 1;
+  setBannerZoom(next);
+}
+function onPreviewPointerDown(e) {
+  if (!previewState) return;
+  if (e.touches && e.touches.length === 2) {
+    const dx = e.touches[0].clientX - e.touches[1].clientX;
+    const dy = e.touches[0].clientY - e.touches[1].clientY;
+    previewState.pinchStartDist = Math.hypot(dx, dy) || 1;
+    previewState.pinchStartScale = previewState.scale;
+    previewState.dragging = false;
+    return;
+  }
+  if (previewState.scale <= 1.02) return;
+  const pt = e.touches ? e.touches[0] : e;
+  previewState.dragging = true;
+  previewState.moved = false;
+  previewState.startX = pt.clientX - previewState.tx;
+  previewState.startY = pt.clientY - previewState.ty;
+  applyPreviewTransform();
+}
+function onPreviewPointerMove(e) {
+  if (!previewState) return;
+  if (e.touches && e.touches.length === 2 && previewState.pinchStartDist) {
+    e.preventDefault();
+    const dx = e.touches[0].clientX - e.touches[1].clientX;
+    const dy = e.touches[0].clientY - e.touches[1].clientY;
+    const dist = Math.hypot(dx, dy);
+    setBannerZoom(previewState.pinchStartScale * (dist / previewState.pinchStartDist));
+    previewState.moved = true;
+    return;
+  }
+  if (!previewState.dragging) return;
+  e.preventDefault();
+  const pt = e.touches ? e.touches[0] : e;
+  const nx = pt.clientX - previewState.startX;
+  const ny = pt.clientY - previewState.startY;
+  if (Math.abs(nx - previewState.tx) > 3 || Math.abs(ny - previewState.ty) > 3) previewState.moved = true;
+  const limit = 160 * (previewState.scale - 1);
+  previewState.tx = Math.max(-limit, Math.min(limit, nx));
+  previewState.ty = Math.max(-limit, Math.min(limit, ny));
+  applyPreviewTransform();
+}
+function onPreviewPointerUp() {
+  if (!previewState) return;
+  previewState.dragging = false;
+  previewState.pinchStartDist = 0;
+  applyPreviewTransform();
+}
+function stepBannerPreview(delta) {
+  if (!previewState) return;
+  previewState.idx = (previewState.idx + delta + previewState.imgs.length) % previewState.imgs.length;
+  previewState.scale = 1;
+  previewState.tx = 0;
+  previewState.ty = 0;
+  renderBannerPreview();
+}
+function closeBannerPreview() {
+  previewState = null;
+  const el = document.getElementById('bannerPreviewWrap');
+  if (el) el.style.display = 'none';
+}
+function renderBannerPreview() {
+  const wrap = document.getElementById('bannerPreviewWrap');
+  if (!wrap || !previewState) return;
+  const { idx, imgs, name, scale } = previewState;
+  const cur = imgs[idx];
+  wrap.style.display = 'block';
+  wrap.innerHTML = `
+    <div class="banner-lightbox" role="dialog" aria-modal="true" aria-label="机型参考图放大预览" onmousemove="onPreviewPointerMove(event)" onmouseup="onPreviewPointerUp()" onmouseleave="onPreviewPointerUp()" ontouchmove="onPreviewPointerMove(event)" ontouchend="onPreviewPointerUp()">
+      <div class="banner-lb-hd">
+        <span style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(name)} · ${esc(cur.label)}（${idx + 1} / ${imgs.length}）</span>
+        <button type="button" class="banner-lb-close" aria-label="关闭预览" onclick="closeBannerPreview()">×</button>
+      </div>
+      <div class="banner-lb-stage" onclick="if(previewState && previewState.scale<=1.02) closeBannerPreview()">
+        <img id="bannerPreviewImg" src="${cur.src}" alt="${esc(name)} ${esc(cur.label)}" draggable="false" onmousedown="onPreviewPointerDown(event)" ontouchstart="onPreviewPointerDown(event)" onclick="event.stopPropagation();toggleBannerZoom()" />
+      </div>
+      <div class="banner-lb-tip">点击图片或双指缩放细节，放大后可拖动查看</div>
+      <div class="banner-lb-ft">
+        <button type="button" class="banner-lb-btn" onclick="stepBannerPreview(-1)">上一张</button>
+        <div class="banner-lb-zoom">
+          <button type="button" class="banner-lb-zbtn" aria-label="缩小" onclick="setBannerZoom(previewState.scale - 0.5)">−</button>
+          <span class="banner-lb-zval" id="bannerZoomVal" title="点此还原" onclick="setBannerZoom(1)">${Math.round(scale * 100)}%</span>
+          <button type="button" class="banner-lb-zbtn" aria-label="放大" onclick="setBannerZoom(previewState.scale + 0.5)">+</button>
+        </div>
+        <button type="button" class="banner-lb-btn" onclick="stepBannerPreview(1)">下一张</button>
+      </div>
+    </div>
+  `;
+  applyPreviewTransform();
 }
 
 let toptipsTimer = null;
@@ -1143,6 +1534,7 @@ function navigate(page, opts = {}) {
   if (opts.cat !== undefined) {
     saveLastCat(opts.cat);
     state.quotesCat = opts.cat;
+    if (opts.brandIdx === undefined) state.quotesBrandIdx = -1;
     state.quotesSeries = '';
     state.inBrandFilter = '';
     state.quotesPageSize = 35;
@@ -1444,9 +1836,9 @@ function renderIndex() {
         ${state.recent.slice(0, 3).map(r => {
           const m = getModel(r.modelId);
           const b = getBrandObj(m[2]);
-          const catTag = m[1] === 1 ? '环保机' : '靓机';
+          const catTag = getCatMeta(m[1]).short;
           const specLabel = [r.cap, r.warranty].filter(Boolean).join(' · ');
-          const meta = [hasBrandInName(m[4], b.name) ? '' : b.name, catTag, specLabel || m[3]].filter(Boolean).join(' · ');
+          const meta = [hasBrandInName(m[4], b.name) ? '' : b.name, catTag, specLabel || m[3], r.time].filter(Boolean).join(' · ');
           return `
             <a href="javascript:;" class="weui-cell weui-cell_access compact-cell" onclick="navigate('model-detail', { modelId:${m[0]}, cap:'${esc(r.cap || '')}', warranty:'${esc(r.warranty || '')}' })">
               <div class="weui-cell__hd" style="margin-right:10px;">${renderBrandLogo(b, 'sm')}</div>
@@ -1454,14 +1846,14 @@ function renderIndex() {
                 <p class="model-name-txt">${esc(m[4])}</p>
                 <p class="model-meta-txt">${esc(meta)}</p>
               </div>
-              <div class="weui-cell__ft"><span class="row-time-txt">${esc(r.time)}</span></div>
+              <div class="weui-cell__ft">${renderListMaxPriceHtml(m, r.cap || '')}</div>
             </a>
           `;
         }).join('') || `<div class="weui-loadmore weui-loadmore_line" style="margin:14px auto;"><span class="weui-loadmore__tips">暂无查询记录</span></div>`}
       </div>
     </div>
 
-    <!-- 3. Recovery Categories (Clean Side-by-Side Tiles, Custom Minimal SVG Icons) -->
+    <!-- 3. Recovery Categories (2-Col Phone Hero + 3-Col Digital Electronics: Laptop / Camera / Tablet) -->
     <div class="home-cat-row">
       <a href="javascript:;" class="home-cat-tile ${state.lastCat === 1 ? 'is-active' : ''}" onclick="navigate('quotes', { cat:1 })">
         <div class="home-cat-top">
@@ -1485,18 +1877,36 @@ function renderIndex() {
       </a>
     </div>
 
-    <!-- 4. Borderless 3x3 Brand Grid with Inline Segmented Category Toggle -->
+    <div class="home-digital-row">
+      <a href="javascript:;" class="home-digital-tile ${state.lastCat === 2 ? 'is-active' : ''}" onclick="navigate('quotes', { cat:2 })">
+        <div class="home-digital-ico">${SVG.laptop}</div>
+        <div class="home-digital-name">笔记本</div>
+        <div class="home-digital-sub">MacBook / 轻薄本</div>
+      </a>
+      <a href="javascript:;" class="home-digital-tile ${state.lastCat === 3 ? 'is-active' : ''}" onclick="navigate('quotes', { cat:3 })">
+        <div class="home-digital-ico">${SVG.camera}</div>
+        <div class="home-digital-name">相机数码</div>
+        <div class="home-digital-sub">微单 / 云台</div>
+      </a>
+      <a href="javascript:;" class="home-digital-tile ${state.lastCat === 4 ? 'is-active' : ''}" onclick="navigate('quotes', { cat:4 })">
+        <div class="home-digital-ico">${SVG.tablet}</div>
+        <div class="home-digital-name">平板电脑</div>
+        <div class="home-digital-sub">iPad / 平板</div>
+      </a>
+    </div>
+
+    <!-- 4. Borderless 3x3 Phone Brand Grid with Inline Segmented Category Toggle -->
     <div class="ui-card">
       <div class="ui-card-hd">
         <span class="ui-card-title">按品牌查价</span>
         <div class="seg-pill" role="tablist" aria-label="品牌入口分类">
-          <button type="button" class="seg-pill-btn ${state.lastCat === 1 ? 'active' : ''}" onclick="saveLastCat(1);render()">环保机</button>
-          <button type="button" class="seg-pill-btn ${state.lastCat === 0 ? 'active' : ''}" onclick="saveLastCat(0);render()">靓机</button>
+          <button type="button" class="seg-pill-btn ${state.lastPhoneCat === 1 ? 'active' : ''}" onclick="saveLastCat(1);render()">环保机</button>
+          <button type="button" class="seg-pill-btn ${state.lastPhoneCat === 0 ? 'active' : ''}" onclick="saveLastCat(0);render()">靓机</button>
         </div>
       </div>
       <div class="brand-grid">
         ${hotBrands.map(b => `
-          <a href="javascript:;" class="brand-grid-item" onclick="navigate('quotes', { cat:${state.lastCat}, brandIdx:${b.idx} })">
+          <a href="javascript:;" class="brand-grid-item" onclick="navigate('quotes', { cat:${state.lastPhoneCat}, brandIdx:${b.idx} })">
             ${renderBrandLogo(b, 'grid')}
             <span class="brand-grid-name">${esc(b.name)}</span>
           </a>
@@ -1586,8 +1996,15 @@ function renderQuotes() {
       ${state.offline ? `<div class="offline-strip"><strong>历史报价</strong>（${RAW.snapshotDate} 09:00）· 断网模式</div>` : ''}
 
       <div class="quotes-tabs" role="tablist">
-        <div class="quotes-tab ${state.quotesCat === 1 ? 'active' : ''}" role="tab" onclick="saveLastCat(1);state.quotesCat=1;state.quotesSeries='';state.inBrandFilter='';state.quotesPageSize=35;state.quotesRightScroll=0;render()">环保机回收</div>
-        <div class="quotes-tab ${state.quotesCat === 0 ? 'active' : ''}" role="tab" onclick="saveLastCat(0);state.quotesCat=0;state.quotesSeries='';state.inBrandFilter='';state.quotesPageSize=35;state.quotesRightScroll=0;render()">靓机回收</div>
+        ${[
+          { id: 1, label: '环保机' },
+          { id: 0, label: '靓机' },
+          { id: 2, label: '笔记本' },
+          { id: 3, label: '相机' },
+          { id: 4, label: '平板' },
+        ].map(c => `
+          <div class="quotes-tab ${state.quotesCat === c.id ? 'active' : ''}" role="tab" onclick="saveLastCat(${c.id});state.quotesCat=${c.id};state.quotesSeries='';state.inBrandFilter='';state.quotesPageSize=35;state.quotesRightScroll=0;render()">${c.label}</div>
+        `).join('')}
       </div>
 
       <div class="quotes-meta-strip">
@@ -1653,7 +2070,7 @@ function renderCompactModelRow(m) {
       <div class="weui-cell__bd" style="min-width:0;">
         <p class="model-name-txt">${esc(m[4])}</p>
       </div>
-      <div class="weui-cell__ft"></div>
+      <div class="weui-cell__ft">${renderListMaxPriceHtml(m)}</div>
     </a>
   `;
 }
@@ -1666,14 +2083,60 @@ function keepInBrandFocus() {
   if (next) { next.focus({ preventScroll:true }); next.setSelectionRange(pos, pos); }
 }
 
-/* Shared model/alias/spec search for the search page and brand catalog. */
+/* Fault-tolerant model / alias / Model No. / spec search (with typo & Levenshtein tolerance) */
+function fixCommonTypos(str) {
+  return String(str).normalize('NFKC').toLowerCase()
+    .replace(/\b(ipone|ipohne|iphne|iphoe|iphnoe|爱疯|挨疯)\b/g, 'iphone')
+    .replace(/(ipone|ipohne|iphne|iphoe|iphnoe|爱疯)/g, 'iphone')
+    .replace(/\b(huwei|hawuei|huawe|huwai)\b/g, 'huawei')
+    .replace(/\b(xaiomi|xiaom|xiomi)\b/g, 'xiaomi')
+    .replace(/\b(remdi|redim|redm)\b/g, 'redmi')
+    .replace(/\b(honer|honro|hono)\b/g, 'honor')
+    .replace(/\b(samsug|samung|samusng)\b/g, 'samsung')
+    .replace(/\b(mata|mtae)\b/g, 'mate')
+    .replace(/\b(fnid|fnd)\b/g, 'find')
+    .replace(/\b(nvoa)\b/g, 'nova')
+    .replace(/\b(ulrta|utra|ultar)\b/g, 'ultra')
+    .replace(/\b(plsu|puls)\b/g, 'plus')
+    .replace(/\b(promx|pormax|ptomax|pro\s*mxa|por\s*max|pto\s*max)\b/g, 'promax')
+    .replace(/\b(por|pto)\b/g, 'pro')
+    .replace(/\bmbp\b/g, 'macbook pro')
+    .replace(/\bmba\b/g, 'macbook air')
+    .replace(/(\d)\s*(pm|promx|pormax)\b/g, '$1 pro max')
+    .replace(/(\d)\s*(por|pto)\b/g, '$1 pro');
+}
 function normalizeSearch(value) {
-  return String(value).normalize('NFKC').toLowerCase()
-    .replace(/(\d)\s*pm\b/g, '$1 pro max')
-    .replace(/pro\s*max/g, 'promax').replace(/[\s_—-]+/g, '');
+  return fixCommonTypos(value)
+    .replace(/pro\s*max/g, 'promax')
+    .replace(/[\s_—-]+/g, '');
+}
+function normalizeCodeKey(value) {
+  return String(value).normalize('NFKC').toLowerCase().replace(/[\s_—-]+/g, '');
+}
+function normalizeCodeLookalike(value) {
+  return normalizeCodeKey(value).replace(/o/g, '0').replace(/[il]/g, '1');
+}
+function editDistanceBounded(a, b, maxDist) {
+  if (Math.abs(a.length - b.length) > maxDist) return maxDist + 1;
+  let prev = Array.from({ length: b.length + 1 }, (_, i) => i);
+  for (let i = 1; i <= a.length; i++) {
+    const cur = [i];
+    let rowMin = i;
+    for (let j = 1; j <= b.length; j++) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      const val = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + cost);
+      cur.push(val);
+      if (val < rowMin) rowMin = val;
+    }
+    if (rowMin > maxDist) return maxDist + 1;
+    prev = cur;
+  }
+  return prev[b.length];
 }
 function splitSearchSpec(value) {
-  let text = String(value).normalize('NFKC').toLowerCase();
+  let text = fixCommonTypos(value);
+  // Also support space-separated RAM+Storage like "K80 12 256" -> "K80 12+256"
+  text = text.replace(/(^|[^a-z0-9])(6|8|12|16|24)\s+(128|256|512|1024)(?:g(?:b)?)?(?=$|[^a-z0-9])/gi, '$1$2+$3');
   const match = text.match(/(^|[^a-z0-9])(\d{1,2}\s*\+\s*(?:64|128|256|512|1024|[12]\s*t(?:b)?)(?:g(?:b)?)?|(?:64|128|256|512|1024)(?:g(?:b)?)?|[12]\s*t(?:b)?)(?=$|[^a-z0-9])/i);
   let storage = '', ram = '';
   if (match) {
@@ -1683,11 +2146,13 @@ function splitSearchSpec(value) {
     storage = parts[parts.length - 1].replace(/g$/, '').replace(/^1024$/, '1t');
     text = text.slice(0, match.index) + match[1] + text.slice(match.index + match[0].length);
   }
-  return { text: normalizeSearch(text).replace(/[()（）]/g, ''), storage, ram };
+  const tokens = text.replace(/[()（）]/g, ' ').split(/[\s_—-]+/).filter(Boolean).map(t => normalizeSearch(t));
+  return { text: normalizeSearch(text).replace(/[()（）]/g, ''), storage, ram, tokens };
 }
 const BRAND_ALIASES = { '苹果':['iphone','apple','苹果'], '华为':['huawei','华为'], '荣耀':['honor','荣耀'],
   '红米':['redmi','红米'], '小米':['xiaomi','小米'], '三星':['samsung','三星'], '一加':['oneplus','一加'],
-  '真我':['realme','真我'] };
+  '真我':['realme','真我'], '联想':['lenovo','联想'], '华硕':['asus','华硕'], '戴尔':['dell','戴尔'],
+  '索尼':['sony','索尼'], '佳能':['canon','佳能'], '富士':['fujifilm','fuji','富士'], '大疆':['dji','大疆'], '尼康':['nikon','尼康'] };
 function aliasesForBrand(index) {
   const name = getBrandObj(index).name;
   return (BRAND_ALIASES[name] || [name]).map(normalizeSearch);
@@ -1698,49 +2163,119 @@ function stripModelBrand(text, index) {
   return result;
 }
 const SEARCH_INDEX = RAW.models.map(m => ({
-  m, name: stripModelBrand(splitSearchSpec(m[4]).text, m[2]),
-  codes: m[5].map(normalizeSearch),
+  m,
+  name: stripModelBrand(splitSearchSpec(m[4]).text, m[2]),
+  fullText: splitSearchSpec(m[4]).text,
+  codes: m[5].map(normalizeCodeKey),
+  codesLoose: m[5].map(normalizeCodeLookalike),
   caps: parseModelDimensions(m).caps.map(cap => ({ cap, ...splitSearchSpec(cap) })),
   embedded: splitSearchSpec(m[4]),
 }));
 function searchAllModels(rawQ, brandIdxFilter = -1) {
+  const rawCodeKey = normalizeCodeKey(rawQ);
+  const rawCodeLoose = normalizeCodeLookalike(rawQ);
+  const looksLikeModelNo = /^[a-z0-9]{3,}$/.test(rawCodeKey) && /\d/.test(rawCodeKey);
   const query = splitSearchSpec(rawQ);
-  if (!query.text && !query.storage) return [];
+  if (!query.text && !query.storage && !looksLikeModelNo) return [];
+
   let brand = brandIdxFilter, name = query.text;
+  let explicitBrandAlias = '';
   const explicit = RAW.brands.map((_, index) => ({ index, alias: aliasesForBrand(index).find(a => name.startsWith(a)) }))
     .filter(x => x.alias).sort((a,b) => b.alias.length - a.alias.length)[0];
   if (explicit) {
     if (brand >= 0 && brand !== explicit.index) return [];
     brand = explicit.index;
+    explicitBrandAlias = explicit.alias;
     name = name.slice(explicit.alias.length);
   }
+  const cleanTokens = query.tokens.filter(t => t && t !== explicitBrandAlias);
   const specMatches = spec => spec.storage === query.storage && (!query.ram || spec.ram === query.ram);
   const results = [];
+  const fuzzyCandidates = [];
+
   for (const entry of SEARCH_INDEX) {
     const { m } = entry;
     if (brand >= 0 && m[2] !== brand) continue;
-    const exactCode = name && entry.codes.includes(name);
-    let rank = exactCode ? 100 : name && entry.name === name ? 80 :
+
+    // 1. Model No. matching (exact > lookalike/hyphen-free > partial code)
+    let codeRank = 0, matchedCode = '';
+    if (looksLikeModelNo && entry.codes.length) {
+      const exactIdx = entry.codes.indexOf(rawCodeKey);
+      if (exactIdx >= 0) {
+        codeRank = 100; matchedCode = m[5][exactIdx];
+      } else {
+        const looseIdx = entry.codesLoose.indexOf(rawCodeLoose);
+        if (looseIdx >= 0) {
+          codeRank = 96; matchedCode = m[5][looseIdx];
+        } else if (rawCodeKey.length >= 4 || (/[a-z]/.test(rawCodeKey) && rawCodeKey.length >= 3)) {
+          const partIdx = entry.codesLoose.findIndex(c => c.length >= 4 && (c.includes(rawCodeLoose) || (rawCodeLoose.length >= 4 && rawCodeLoose.includes(c))));
+          if (partIdx >= 0) {
+            codeRank = 90; matchedCode = m[5][partIdx];
+          }
+        }
+      }
+    }
+
+    // 2. Standard name matching
+    let rank = codeRank || (name && entry.name === name ? 80 :
       name && entry.name.startsWith(name) && !(/^\d/.test(entry.name.slice(name.length)) && /\d$/.test(name)) ? 60 :
-      name && entry.name.includes(name) ? 40 : !name && (brand >= 0 || query.storage) ? 20 : 0;
-    if (!rank) continue;
+      name && entry.name.includes(name) ? 40 :
+      !name && (brand >= 0 || query.storage) ? 20 : 0);
+
+    // 3. Token-bag order-independent tolerance (e.g. "max 16 pro", "pro x8 find")
+    let fuzzyReason = '';
+    if (!rank && cleanTokens.length >= 2 && cleanTokens.every(t => entry.name.includes(t) || entry.fullText.includes(t))) {
+      rank = 34;
+      fuzzyReason = '智能容错';
+    }
+
     let preCap = '', specRank = 0;
     if (query.storage) {
       const matches = entry.caps.filter(specMatches);
       if (matches.length) {
         specRank = 2;
-        // Storage alone cannot silently choose a RAM or edition variant.
         if (matches.length === 1 && (!matches[0].ram || query.ram === matches[0].ram)) preCap = matches[0].cap;
       } else if (entry.embedded.storage) {
         if (!specMatches(entry.embedded)) continue;
         specRank = 2;
       } else if (entry.caps.some(x => x.storage)) continue;
     }
-    results.push({ m, rank, specRank, preCap, reason: exactCode ? `代码 ${m[5][entry.codes.indexOf(name)]}` : specRank ? '规格匹配' : '型号匹配' });
+
+    if (rank) {
+      results.push({
+        m, rank, specRank, preCap,
+        reason: codeRank ? `Model No. ${matchedCode}` : (fuzzyReason || (specRank ? '规格匹配' : '型号匹配')),
+      });
+    } else if ((name && name.length >= 4) || (looksLikeModelNo && rawCodeKey.length >= 4)) {
+      // Collect edit-distance fuzzy candidates in case direct match yields few/no results
+      const maxD = (name || rawCodeKey).length >= 7 ? 2 : 1;
+      let bestDist = maxD + 1;
+      let codeNear = '';
+      if (name && name.length >= 4 && entry.name.length >= 3) {
+        const d = editDistanceBounded(name, entry.name, maxD);
+        if (d < bestDist) bestDist = d;
+      }
+      if (looksLikeModelNo && entry.codesLoose.length) {
+        for (let ci = 0; ci < entry.codesLoose.length; ci++) {
+          const c = entry.codesLoose[ci];
+          if (c.length < 4) continue;
+          const d = editDistanceBounded(rawCodeLoose, c, 1);
+          if (d < bestDist) { bestDist = d; codeNear = m[5][ci]; }
+        }
+      }
+      if (bestDist <= maxD) {
+        fuzzyCandidates.push({
+          m, rank: 28 - bestDist * 4, specRank, preCap,
+          reason: codeNear ? `相近 Model No. ${codeNear}` : '拼写容错',
+        });
+      }
+    }
   }
-  results.sort((a,b) => Number(b.rank === 100) - Number(a.rank === 100) || b.specRank - a.specRank || b.rank - a.rank ||
+
+  const finalList = results.length ? results : fuzzyCandidates;
+  finalList.sort((a,b) => Number(b.rank >= 90) - Number(a.rank >= 90) || b.specRank - a.specRank || b.rank - a.rank ||
     Number(b.m[1] === state.lastCat) - Number(a.m[1] === state.lastCat) || a.m[4].localeCompare(b.m[4], 'zh-CN', { numeric:true }));
-  return results;
+  return finalList;
 }
 
 function renderSearch() {
@@ -1762,9 +2297,9 @@ function renderSearch() {
         </div>
       </div>
       <div class="ui-card">
-        <div class="ui-card-hd"><span class="ui-card-title">常用搜索</span></div>
+        <div class="ui-card-hd"><span class="ui-card-title">常用搜索（支持简称 / Model No. / 拼写容错）</span></div>
         <div style="padding:2px 14px 14px;display:flex;flex-wrap:wrap;gap:6px;">
-          ${['16pm 256', '苹果16', 'K80 12+256', 'A3297', 'Mate 70', 'Find X8'].map(ex => `<button type="button" class="chip chip-sm" onclick="state.searchQuery='${ex}';state.searchLimit=40;render()">${ex}</button>`).join('')}
+          ${['16pm 256', 'A3297', 'MacBook M4', 'A7M4', 'iPad Pro', 'PKU110', 'ipone 16', 'K80 12+256'].map(ex => `<button type="button" class="chip chip-sm" onclick="state.searchQuery='${ex}';state.searchLimit=40;render()">${ex}</button>`).join('')}
         </div>
       </div>
     `;
@@ -1773,7 +2308,7 @@ function renderSearch() {
       <div class="ui-card" style="padding:36px 20px;text-align:center;">
         <i class="weui-icon-info weui-icon_msg" style="color:var(--ink-3);"></i>
         <h2 style="font-size:17px;font-weight:600;color:var(--ink-1);margin:14px 0 6px;">未找到匹配结果</h2>
-        <p style="font-size:13.5px;color:var(--ink-2);line-height:1.55;margin:0 0 20px;">未找到与“${esc(q)}”匹配的机型，可尝试标准名称或型号代码；若确未收录可提交反馈。</p>
+        <p style="font-size:13.5px;color:var(--ink-2);line-height:1.55;margin:0 0 20px;">未找到与“${esc(q)}”匹配的机型，可尝试标准名称或机身 Model No.；若确未收录可提交反馈。</p>
         <a href="javascript:;" class="ui-btn ui-btn-primary ui-btn-block" data-query="${esc(q)}" onclick="navigate('feedback', { feedbackType:'missing_model', feedbackText:'机型搜索问题：'+this.dataset.query })">反馈机型问题</a>
       </div>
     `;
@@ -1781,12 +2316,12 @@ function renderSearch() {
     const sliced = results.slice(0, state.searchLimit);
     content = `
       ${isAmbiguous ? `<div class="offline-strip">找到 ${results.length} 款相近机型，请点选确认。</div>` : ''}
-      <div class="ui-section-hd"><span>共找到 ${results.length} 款机型</span></div>
+      <div class="ui-section-hd"><span>共找到 ${results.length} 款机型</span><span>列表为最高参考价</span></div>
       <div class="ui-card" style="margin-top:0;">
         <div class="weui-cells">
           ${sliced.map(({ m, reason, preCap }) => {
             const b = getBrandObj(m[2]);
-            const catTag = m[1] === 0 ? '靓机' : '环保机';
+            const catTag = getCatMeta(m[1]).short;
             const meta = [hasBrandInName(m[4], b.name) ? '' : b.name, catTag, reason, preCap ? `预选 ${preCap}` : ''].filter(Boolean).join(' · ');
             return `
               <a href="javascript:;" class="weui-cell weui-cell_access compact-cell" onclick="navigate('model-detail', { modelId:${m[0]}, cap:'${esc(preCap)}' })">
@@ -1795,7 +2330,7 @@ function renderSearch() {
                   <p class="model-name-txt">${esc(m[4])}</p>
                   <p class="model-meta-txt">${esc(meta)}</p>
                 </div>
-                <div class="weui-cell__ft"></div>
+                <div class="weui-cell__ft">${renderListMaxPriceHtml(m, preCap)}</div>
               </a>
             `;
           }).join('')}
@@ -1814,7 +2349,7 @@ function renderSearch() {
       <div class="search-top-bar">
         <div class="search-pill">
           ${SVG.search}
-          <input type="text" inputmode="search" enterkeyhint="search" aria-label="搜索机型" id="searchInput" placeholder="输入机型、简称或型号代码" value="${esc(q)}" oncompositionstart="state.composing=true" oncompositionend="state.composing=false;state.searchQuery=this.value;state.searchLimit=40;keepSearchFocus()" oninput="state.searchQuery=this.value;if(!state.composing){state.searchLimit=40;keepSearchFocus()}" />
+          <input type="text" inputmode="search" enterkeyhint="search" aria-label="搜索机型" id="searchInput" placeholder="输入机型、简称或 Model No.（如 A3297）" value="${esc(q)}" oncompositionstart="state.composing=true" oncompositionend="state.composing=false;state.searchQuery=this.value;state.searchLimit=40;keepSearchFocus()" oninput="state.searchQuery=this.value;if(!state.composing){state.searchLimit=40;keepSearchFocus()}" />
           ${q ? `<button type="button" class="search-clear-btn" aria-label="清空" onclick="state.searchQuery='';keepSearchFocus()">×</button>` : ''}
         </div>
         <a href="javascript:;" class="search-cancel-link" onclick="goBack()">取消</a>
@@ -1861,6 +2396,8 @@ function renderModelDetail() {
   const remark = RAW.remarks[m[6]] || '';
   const shortDate = RAW.snapshotDate.slice(5);
   const metaParts = [hasBrandInName(m[4], b.name) ? '' : b.name, m[3], m[5].length ? m[5].slice(0, 2).join('/') : ''].filter(Boolean);
+  const bannerImgs = getModelBannerImages(m);
+  detailBannerIdx = 0;
 
   return `
     <div class="detail-wrap">
@@ -1868,8 +2405,29 @@ function renderModelDetail() {
         ${state.offline ? `<div class="offline-strip"><strong>历史报价</strong>（${RAW.snapshotDate} 09:00）· 当前断网，请联网更新后再参考</div>` : ''}
         ${state.expired ? `<div class="offline-strip"><strong>报价已过期</strong> · 请等待最新报价更新后再参考</div>` : ''}
 
-        <!-- 1. Inset Model Header + Inline Spec/Warranty Chips -->
+        <!-- 1. Multi-Image Phone Banner + Model Header + Inline Spec/Warranty Chips -->
         <div class="ui-card">
+          ${bannerImgs.length ? `
+            <div class="detail-banner" aria-label="机型参考图轮播">
+              <div class="banner-track" id="detailBannerTrack" onscroll="onBannerScroll(this)">
+                ${bannerImgs.map((img, i) => `
+                  <div class="banner-slide" onclick="openBannerPreview(${m[0]}, ${i})" title="点击放大查看">
+                    <img src="${img.src}" alt="${esc(m[4])} ${esc(img.label)}" />
+                  </div>
+                `).join('')}
+              </div>
+              <span class="banner-angle-pill" id="bannerAnglePill">${esc(bannerImgs[0].label)}</span>
+              ${bannerImgs.length > 1 ? `
+                <div class="banner-dots" aria-hidden="true">
+                  ${bannerImgs.map((_, i) => `<span class="banner-dot ${i === 0 ? 'active' : ''}" id="bannerDot_${i}"></span>`).join('')}
+                </div>
+                <span class="banner-count-pill" id="bannerCountPill">1 / ${bannerImgs.length}</span>
+                <button type="button" class="banner-arrow prev" aria-label="上一张" onclick="stepDetailBanner(-1)">‹</button>
+                <button type="button" class="banner-arrow next" aria-label="下一张" onclick="stepDetailBanner(1)">›</button>
+              ` : ''}
+            </div>
+          ` : ''}
+
           <div class="detail-head">
             <div class="detail-title-row">
               ${renderBrandLogo(b, 'sm')}
@@ -1877,7 +2435,7 @@ function renderModelDetail() {
                 <span style="min-width:0;overflow:hidden;text-overflow:ellipsis;">${esc(m[4])}</span>
                 <span class="detail-copy-ico" aria-hidden="true">${SVG.copy}</span>
               </div>
-              <span class="detail-cat-pill">${m[1] === 0 ? '靓机' : '环保机'}</span>
+              <span class="detail-cat-pill">${esc(getCatMeta(m[1]).short)}</span>
             </div>
             <div class="detail-meta-row">
               <span class="detail-meta-left">${esc(metaParts.join(' · ') || b.name)}</span>
@@ -1889,7 +2447,7 @@ function renderModelDetail() {
             <div class="spec-section">
               ${dims.caps.length ? `
                 <div class="spec-row">
-                  <span class="spec-row-label">容量</span>
+                  <span class="spec-row-label">${m[1] === 2 ? '配置' : m[1] === 3 ? '版本' : '容量'}</span>
                   <div class="spec-wrap">
                     ${dims.caps.map(c => `<button type="button" class="chip ${state.selectedCap === c ? 'is-selected' : ''}" aria-pressed="${state.selectedCap === c}" onclick="selectCap('${esc(c)}')">${esc(c)}</button>`).join('')}
                   </div>
