@@ -265,25 +265,28 @@
     display: flex; align-items: center; justify-content: center;
   }
   .inviter-contact-body { flex: 1; min-width: 0; cursor: pointer; }
-  .inviter-contact-label { font-size: 11.5px; color: var(--ink-2); line-height: 1.3; }
-  .inviter-contact-num {
-    font-size: 14.5px; font-weight: 600; color: var(--ink-1);
-    font-variant-numeric: tabular-nums; line-height: 1.35; margin-top: 1px;
-    display: inline-flex; align-items: center; gap: 5px;
+  .inviter-contact-label {
+    font-size: 13px; font-weight: 600; color: var(--ink-1); line-height: 1.3;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
-  .inviter-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+  .inviter-contact-num {
+    font-size: 13px; font-weight: 500; color: var(--ink-2);
+    font-variant-numeric: tabular-nums; line-height: 1.35; margin-top: 2px;
+    display: inline-flex; align-items: center; gap: 4px; white-space: nowrap;
+  }
+  .inviter-actions { display: flex; align-items: center; gap: 5px; flex-shrink: 0; }
   .inviter-qr-btn {
-    flex-shrink: 0; height: 30px; padding: 0 10px; border-radius: 7px; border: none;
+    flex-shrink: 0; height: 29px; padding: 0 8px; border-radius: 7px; border: none;
     background: var(--bg-subtle); color: var(--ink-1);
-    font-size: 12.5px; font-weight: 500; cursor: pointer;
-    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 12px; font-weight: 500; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 3px; white-space: nowrap;
     transition: background-color 0.12s ease;
   }
   .inviter-qr-btn:active { background: var(--bg-hover); }
   .inviter-call-btn {
-    flex-shrink: 0; height: 30px; padding: 0 11px; border-radius: 7px; border: none;
+    flex-shrink: 0; height: 29px; padding: 0 10px; border-radius: 7px; border: none;
     background: var(--brand-tint); color: var(--brand);
-    font-size: 12.5px; font-weight: 600; cursor: pointer;
+    font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap;
     display: inline-flex; align-items: center; justify-content: center;
     transition: background-color 0.12s ease;
   }
@@ -343,26 +346,29 @@
   .home-cat-name { font-size: 15px; font-weight: 600; color: var(--ink-1); line-height: 1.3; }
   .home-cat-desc { font-size: 12px; color: var(--ink-2); line-height: 1.35; margin-top: 2px; }
 
-  /* Compact 3-Col Digital Categories Row (Laptop / Camera / Tablet) */
+  /* Compact 3-Col Digital Categories Row (Unified Left-Aligned Bento Style with Phone Row) */
   .home-digital-row {
-    margin: 8px 12px 0;
-    display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+    margin: 10px 12px 0;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
   }
   .home-digital-tile {
-    background: var(--bg-surface); border-radius: 11px;
-    padding: 10px 8px; text-decoration: none;
-    display: flex; flex-direction: column; align-items: center; gap: 5px;
+    background: var(--bg-surface); border-radius: var(--r-card);
+    padding: 11px 11px 12px; text-decoration: none;
+    display: flex; flex-direction: column; align-items: stretch; gap: 7px; min-width: 0;
     border: 1px solid transparent; transition: background-color 0.12s ease, border-color 0.12s ease;
   }
   .home-digital-tile:active { background: var(--bg-subtle); }
   .home-digital-tile.is-active { border-color: var(--brand-border); background: linear-gradient(180deg, rgba(7,193,96,0.05) 0%, #FFFFFF 100%); }
   .home-digital-ico {
     width: 30px; height: 30px; border-radius: 8px; background: var(--bg-subtle);
-    color: var(--ink-1); display: flex; align-items: center; justify-content: center;
+    color: var(--ink-1); display: flex; align-items: center; justify-content: center; flex-shrink: 0;
   }
   .home-digital-tile.is-active .home-digital-ico { background: var(--brand-tint); color: var(--brand); }
-  .home-digital-name { font-size: 13px; font-weight: 600; color: var(--ink-1); line-height: 1.25; }
-  .home-digital-sub { font-size: 10.5px; color: var(--ink-3); line-height: 1.2; }
+  .home-digital-name { font-size: 13.5px; font-weight: 600; color: var(--ink-1); line-height: 1.3; }
+  .home-digital-sub {
+    font-size: 11px; color: var(--ink-2); line-height: 1.3; margin-top: 2px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
 
   /* Segmented inline switcher (Home Brand Header) */
   .seg-pill {
@@ -444,7 +450,7 @@
 
   /* Detail Page: Multi-Image Swipeable Banner (<swiper> parity) */
   .detail-banner {
-    position: relative; height: 152px; background: #E2E5E9;
+    position: relative; height: 156px; background: #EBECEF;
     overflow: hidden; border-bottom: 0.5px solid var(--hairline);
     user-select: none;
   }
@@ -457,10 +463,11 @@
   .banner-slide {
     flex: 0 0 100%; width: 100%; height: 100%; scroll-snap-align: start;
     display: flex; align-items: center; justify-content: center;
-    cursor: zoom-in; position: relative; background: #E2E5E9;
+    cursor: zoom-in; position: relative; background: #EBECEF;
   }
   .banner-slide img {
     width: 100%; height: 100%; object-fit: contain; display: block;
+    padding: 4px 0 18px; box-sizing: border-box;
     pointer-events: none;
   }
   .banner-angle-pill {
@@ -564,7 +571,7 @@
 
   /* Detail Page: Single-Screen Precision Layout */
   .detail-wrap { min-height: 100%; display: flex; flex-direction: column; }
-  .detail-main { flex: 1; padding-bottom: 6px; }
+  .detail-main { flex: 1; padding-bottom: 16px; }
   .detail-head { padding: 13px 14px 11px; }
   .detail-title-row { display: flex; align-items: center; gap: 8px; }
   .detail-title-txt {
@@ -675,21 +682,27 @@
 
   /* Clean List Typography */
   .compact-cell { padding: 11px 14px !important; min-height: 46px; box-sizing: border-box; }
+  .compact-cell .weui-cell__bd { padding-right: 8px; }
   .model-name-txt { font-size: var(--fs-body); font-weight: 500; color: var(--ink-1); line-height: 1.38; margin: 0; }
   .search-hl { background: transparent; color: var(--brand); font-weight: 600; padding: 0; }
   .fuzzy-tip-strip {
     margin: 8px 12px 0;
     padding: 8px 12px;
-    border-radius: 8px;
-    background: var(--brand-soft);
-    color: var(--brand-ink);
+    border-radius: 9px;
+    background: var(--brand-tint);
+    border: 0.5px solid rgba(7, 193, 96, 0.22);
+    color: #058C45;
     font-size: 12.5px;
+    font-weight: 500;
     line-height: 1.45;
     display: flex;
     align-items: center;
     gap: 6px;
   }
-  .model-meta-txt { font-size: 12.5px; color: var(--ink-2); margin: 2px 0 0; line-height: 1.35; }
+  .model-meta-txt {
+    font-size: 12.5px; color: var(--ink-2); margin: 2px 0 0; line-height: 1.35;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
   .row-time-txt { font-size: 11.5px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
 
   /* Mine Profile Card */
@@ -1815,7 +1828,7 @@ function renderIndex() {
     <div class="search-top-bar">
       <div class="search-pill" role="button" tabindex="0" onclick="navigate('search', { focusSearch: true })">
         ${SVG.search}
-        <span>搜索机型、简称或型号代码</span>
+        <span>搜型号、简称、拼音或 Model No.</span>
       </div>
     </div>
 
@@ -1824,8 +1837,8 @@ function renderIndex() {
       <div class="inviter-contact-card">
         <div class="inviter-phone-ico" aria-hidden="true">${SVG.phone}</div>
         <div class="inviter-contact-body" ${inviterContact.phone ? `onclick="copyText('${esc(inviterContact.phone)}','已复制联系方式')"` : `onclick="openInviterQrDialog()"`}>
-          <div class="inviter-contact-label" style="font-size:13px;font-weight:600;color:var(--ink-1);">回收手机找 ${esc(inviterContact.name)}</div>
-          <div class="inviter-contact-num" style="font-size:13px;font-weight:500;color:var(--ink-2);">
+          <div class="inviter-contact-label">回收手机找 ${esc(inviterContact.name)}</div>
+          <div class="inviter-contact-num">
             ${inviterContact.phone
               ? `<span>${esc(fmtPhoneDisplay(inviterContact.phone))}</span><span class="detail-copy-ico" aria-hidden="true">${SVG.copy}</span>`
               : `<span>点右侧扫码加微信</span>`
@@ -1851,7 +1864,7 @@ function renderIndex() {
           const b = getBrandObj(m[2]);
           const catTag = getCatMeta(m[1]).short;
           const specLabel = [r.cap, r.warranty].filter(Boolean).join(' · ');
-          const meta = [hasBrandInName(m[4], b.name) ? '' : b.name, catTag, specLabel || m[3], r.time].filter(Boolean).join(' · ');
+          const meta = [hasBrandInName(m[4], b.name) ? '' : b.name, catTag, specLabel, r.time].filter(Boolean).join(' · ');
           return `
             <a href="javascript:;" class="weui-cell weui-cell_access compact-cell" onclick="navigate('model-detail', { modelId:${m[0]}, cap:'${esc(r.cap || '')}', warranty:'${esc(r.warranty || '')}' })">
               <div class="weui-cell__hd" style="margin-right:10px;">${renderBrandLogo(b, 'sm')}</div>
@@ -1892,19 +1905,34 @@ function renderIndex() {
 
     <div class="home-digital-row">
       <a href="javascript:;" class="home-digital-tile ${state.lastCat === 2 ? 'is-active' : ''}" onclick="navigate('quotes', { cat:2 })">
-        <div class="home-digital-ico">${SVG.laptop}</div>
-        <div class="home-digital-name">笔记本</div>
-        <div class="home-digital-sub">MacBook / 轻薄本</div>
+        <div class="home-cat-top">
+          <div class="home-digital-ico">${SVG.laptop}</div>
+          ${state.lastCat === 2 ? '<span class="home-cat-dot" aria-label="当前常用"></span>' : ''}
+        </div>
+        <div>
+          <div class="home-digital-name">笔记本</div>
+          <div class="home-digital-sub">MacBook 等</div>
+        </div>
       </a>
       <a href="javascript:;" class="home-digital-tile ${state.lastCat === 3 ? 'is-active' : ''}" onclick="navigate('quotes', { cat:3 })">
-        <div class="home-digital-ico">${SVG.camera}</div>
-        <div class="home-digital-name">相机数码</div>
-        <div class="home-digital-sub">微单 / 云台</div>
+        <div class="home-cat-top">
+          <div class="home-digital-ico">${SVG.camera}</div>
+          ${state.lastCat === 3 ? '<span class="home-cat-dot" aria-label="当前常用"></span>' : ''}
+        </div>
+        <div>
+          <div class="home-digital-name">相机数码</div>
+          <div class="home-digital-sub">微单 / 云台</div>
+        </div>
       </a>
       <a href="javascript:;" class="home-digital-tile ${state.lastCat === 4 ? 'is-active' : ''}" onclick="navigate('quotes', { cat:4 })">
-        <div class="home-digital-ico">${SVG.tablet}</div>
-        <div class="home-digital-name">平板电脑</div>
-        <div class="home-digital-sub">iPad / 平板</div>
+        <div class="home-cat-top">
+          <div class="home-digital-ico">${SVG.tablet}</div>
+          ${state.lastCat === 4 ? '<span class="home-cat-dot" aria-label="当前常用"></span>' : ''}
+        </div>
+        <div>
+          <div class="home-digital-name">平板电脑</div>
+          <div class="home-digital-sub">iPad / 平板</div>
+        </div>
       </a>
     </div>
 
@@ -2671,11 +2699,15 @@ function highlightSearchTitle(title, rawQ) {
   const q = stripInvisible(rawQ).trim();
   if (!q) return safeTitle;
   const tokens = Array.from(new Set(tokenizeSmart(fixCommonTypos(q)).filter(t => t.length >= 2 || /^\d+$/.test(t))))
-    .sort((a, b) => b.length - a.length).slice(0, 5);
+    .sort((a, b) => b.length - a.length).slice(0, 6);
   if (!tokens.length) return safeTitle;
-  const pattern = tokens.map(t => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
+  // Expand Latin prefix tokens cleanly to whole words so "pr" highlights "Pro" instead of splitting "Pr"+"o"
+  const parts = tokens.map(t => {
+    const escaped = t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return /^[a-z]{2,}$/i.test(t) ? `\\b${escaped}[a-z]*` : escaped;
+  });
   try {
-    return safeTitle.replace(new RegExp(`(${pattern})`, 'gi'), '<mark class="search-hl">$1</mark>');
+    return safeTitle.replace(new RegExp(`(${parts.join('|')})`, 'gi'), '<mark class="search-hl">$1</mark>');
   } catch (_) {
     return safeTitle;
   }
@@ -2990,17 +3022,19 @@ function renderRecent() {
         ${state.recent.map(r => {
           const m = getModel(r.modelId);
           const b = getBrandObj(m[2]);
+          const catTag = getCatMeta(m[1]).short;
           const sp = [r.cap, r.warranty].filter(Boolean).join(' · ');
-          const meta = [hasBrandInName(m[4], b.name) ? '' : b.name, sp, r.time].filter(Boolean).join(' · ');
+          const meta = [hasBrandInName(m[4], b.name) ? '' : b.name, catTag, sp, r.time].filter(Boolean).join(' · ');
           return `
             <div class="weui-cell compact-cell" style="cursor:pointer;" onclick="navigate('model-detail', { modelId:${m[0]}, cap:'${esc(r.cap || '')}', warranty:'${esc(r.warranty || '')}' })">
               <div class="weui-cell__hd" style="margin-right:10px;">${renderBrandLogo(b, 'sm')}</div>
-              <div class="weui-cell__bd">
+              <div class="weui-cell__bd" style="min-width:0;">
                 <p class="model-name-txt">${esc(m[4])}</p>
                 <p class="model-meta-txt">${esc(meta)}</p>
               </div>
-              <div class="weui-cell__ft">
-                <a href="javascript:;" style="color:var(--ink-3);font-size:13px;padding:6px;text-decoration:none;" onclick="event.stopPropagation();state.recent=state.recent.filter(x=>x.id!=='${r.id}');render()">删除</a>
+              <div class="weui-cell__ft" style="display:flex;align-items:center;gap:8px;">
+                ${renderListMaxPriceHtml(m, r.cap || '')}
+                <a href="javascript:;" style="color:var(--ink-3);font-size:12.5px;padding:4px 2px;text-decoration:none;flex-shrink:0;" onclick="event.stopPropagation();state.recent=state.recent.filter(x=>x.id!=='${r.id}');render()">删除</a>
               </div>
             </div>
           `;
@@ -3280,7 +3314,7 @@ function renderConsole() {
   const active = getActiveBook();
   document.getElementById('stateInspector').textContent = JSON.stringify({
     page: state.page,
-    remembered_lastCat: state.lastCat === 1 ? '环保机回收' : '靓机回收',
+    remembered_lastCat: getCatMeta(state.lastCat).name,
     spec_confirmed: [state.selectedCap || '未选容量', state.selectedWarranty || '未选保修(如适用)'],
     focus_card_open: !!state.focusCard,
     offline: state.offline,
