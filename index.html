@@ -676,6 +676,19 @@
   /* Clean List Typography */
   .compact-cell { padding: 11px 14px !important; min-height: 46px; box-sizing: border-box; }
   .model-name-txt { font-size: var(--fs-body); font-weight: 500; color: var(--ink-1); line-height: 1.38; margin: 0; }
+  .search-hl { background: transparent; color: var(--brand); font-weight: 600; padding: 0; }
+  .fuzzy-tip-strip {
+    margin: 8px 12px 0;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: var(--brand-soft);
+    color: var(--brand-ink);
+    font-size: 12.5px;
+    line-height: 1.45;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
   .model-meta-txt { font-size: 12.5px; color: var(--ink-2); margin: 2px 0 0; line-height: 1.35; }
   .row-time-txt { font-size: 11.5px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
 
@@ -2083,60 +2096,180 @@ function keepInBrandFocus() {
   if (next) { next.focus({ preventScroll:true }); next.setSelectionRange(pos, pos); }
 }
 
-/* Fault-tolerant model / alias / Model No. / spec search (with typo & Levenshtein tolerance) */
+/* Powerful Multi-Layer Fuzzy & Error-Tolerant Search Engine
+ * Supports: Model No. exact/lookalike/transposed, Damerau-Levenshtein typos,
+ * Pinyin full/initials, Chinese homophones, shorthands (16pm/m70p/s24u/mbp),
+ * order-independent tokens, noise stripping (colors/5G/国行), sub-brand fallback. */
+const CJK_PY = Object.create(null);
+('一yi 丁ding 三san 上shang 下xia 不bu 专zhuan 世shi 业ye 两liang 个ge 中zhong 为wei 乐le 二er 云yun 亚ya 享xiang 人ren 仑lun 他ta 代dai 令ling 以yi 价jia 优you 传chuan 伦lun 低di 体ti 作zuo 佳jia 例li 依yi 便bian 保bao 信xin 倍bei 假jia 停ting 像xiang 元yuan 先xian 全quan 兰lan 兴xing 其qi 典dian 内nei 军jun 冠guan 准zhun 凡fan 凯kai 刀dao 列lie 刚gang 创chuang 别bie 制zhi 力li 功gong 加jia 动dong 努nu 北bei 十shi 千qian 华hua 单dan 南nan 博bo 卡ka 卫wei 原yuan 及ji 双shuang 变bian 叠die 台tai 号hao 合he 同tong 后hou 含han 周zhou 和he 品pin 哈ha 哥ge 唯wei 回hui 国guo 图tu 坚jian 型xing 基ji 境jing 增zeng 墨mo 士shi 外wai 大da 天tian 头tou 奇qi 套tao 奢she 威wei 子zi 字zi 孙sun 学xue 宇yu 定ding 客ke 家jia 容rong 富fu 寸cun 尊zun 小xiao 尔er 尚shang 尼ni 屏ping 属shu 峰feng 巅dian 师shi 常chang 幅fu 幕mu 平ping 年nian 幻huan 序xu 废fei 康kang 强qiang 形xing 彩cai 影ying 徕lai 微wei 志zhi 息xi 想xiang 感gan 戏xi 成cheng 我wo 戴dai 手shou 打da 托tuo 折zhe 拉la 拯zheng 持chi 指zhi 按an 挑tiao 捷jie 探tan 携xie 摄she 摩mo 收shou 救jiu 数shu 斗dou 斤jin 斯si 新xin 族zu 旗qi 无wu 时shi 昆kun 明ming 星xing 春chun 普pu 智zhi 暂zan 曲qu 有you 本ben 术shu 朵duo 机ji 杂za 板ban 极ji 果guo 柔rou 标biao 格ge 框kuang 档dang 桥qiao 梦meng 檬meng 欢huan 款kuan 步bu 武wu 比bi 气qi 水shui 池chi 洋yang 洛luo 活huo 派pai 海hai 消xiao 混hun 清qing 港gang 游you 漾yang 潮chao 火huo 灵ling 点dian 热re 焕huan 焦jiao 爱ai 版ban 牌pai 牛niu 特te 狂kuang 玑ji 玩wan 瓷ci 用yong 电dian 画hua 畅chang 界jie 疆jiang 白bai 盖gai 盟meng 直zhi 相xiang 盾dun 真zhen 硕shuo 示shi 神shen 祥xiang 称cheng 移yi 空kong 窥kui 立li 竞jing 第di 米mi 精jing 糖tang 系xi 索suo 红hong 级ji 纹wen 统tong 续xu 绿lv 网wang 罗luo 置zhi 美mei 翻fan 耀yao 老lao 者zhe 联lian 能neng 至zhi 臻zhen 航hang 舰jian 色se 艺yi 芒mang 花hua 苏su 英ying 苹ping 荣rong 莎sha 莓mei 蓝lan 藏cang 蜂feng 行xing 袖xiu 装zhuang 规gui 视shi 计ji 设she 诺nuo 货huo 赛sai 超chao 越yue 跑pao 轻qing 边bian 迈mai 远yuan 逆ni 选xuan 透tou 途tu 通tong 速su 道dao 配pei 酷ku 里li 量liang 金jin 钛tai 钦qin 铂bo 银yin 锋feng 锐rui 锤chui 键jian 长chang 门men 闪shan 防fang 阿a 限xian 陶tao 雄xiong 雷lei 青qing 非fei 面mian 韩han 顶ding 顿dun 领ling 颖ying 风feng 馒man 马ma 驰chi 高gao 魅mei 魔mo 鲜xian 鲨sha 鸟niao 鸣ming 麦mai 黄huang 黑hei 鼎ding 龙long 拼pin 凭ping 伟wei 溶rong 药yao 迷mi 散san 珍zhen 妹mei 妮ni 所suo 复fu 付fu 将jiang 江jiang 沙sha 连lian 说shuo 挨ai 疯feng 脑nao 笔bi 记ji 反fan 袋dai 跌die 破po 壳ke 库ku 艾ai 欧ou 珀po 泊bo 维wei 沃wo 塔ta 瓦wa 德de 吉ji 克ke 范fan 奥ao 若ruo 你ni')
+  .split(' ').forEach(pair => { CJK_PY[pair[0]] = pair.slice(1); });
+
+function toPinyinData(str) {
+  let full = '', init = '';
+  for (let i = 0; i < str.length; i++) {
+    const ch = str[i];
+    const py = CJK_PY[ch];
+    if (py) { full += py; init += py[0]; }
+    else if (/[a-z0-9]/.test(ch)) { full += ch; init += ch; }
+  }
+  return { full, init };
+}
+function stripInvisible(str) {
+  return String(str || '').normalize('NFKC').replace(/[\u200B-\u200D\uFEFF]/g, '');
+}
 function fixCommonTypos(str) {
-  return String(str).normalize('NFKC').toLowerCase()
-    .replace(/\b(ipone|ipohne|iphne|iphoe|iphnoe|爱疯|挨疯)\b/g, 'iphone')
-    .replace(/(ipone|ipohne|iphne|iphoe|iphnoe|爱疯)/g, 'iphone')
-    .replace(/\b(huwei|hawuei|huawe|huwai)\b/g, 'huawei')
-    .replace(/\b(xaiomi|xiaom|xiomi)\b/g, 'xiaomi')
-    .replace(/\b(remdi|redim|redm)\b/g, 'redmi')
-    .replace(/\b(honer|honro|hono)\b/g, 'honor')
-    .replace(/\b(samsug|samung|samusng)\b/g, 'samsung')
-    .replace(/\b(mata|mtae)\b/g, 'mate')
-    .replace(/\b(fnid|fnd)\b/g, 'find')
-    .replace(/\b(nvoa)\b/g, 'nova')
-    .replace(/\b(ulrta|utra|ultar)\b/g, 'ultra')
+  return stripInvisible(str).toLowerCase()
+    // Brand & product homophones / English misspellings
+    .replace(/(ipone|ipohne|iphne|iphoe|iphnoe|iphoen|ihpone|ifone|iphon(?!e)|爱疯|挨疯)/g, 'iphone')
+    .replace(/\b(ipda|ipd|爱派)\b/g, 'ipad')
+    .replace(/(makbook|macbok|macboook|macboko|麦金塔|苹果笔记本|苹果电脑)/g, 'macbook')
+    .replace(/(平果|拼果|凭果|果子)/g, '苹果')
+    .replace(/(华威|花为|画为|华伟)/g, '华为')
+    .replace(/(溶耀|容耀|荣药)/g, '荣耀')
+    .replace(/(小迷|消米)/g, '小米')
+    .replace(/(红迷)/g, '红米')
+    .replace(/(三兴|散星)/g, '三星')
+    .replace(/(一家|一佳)/g, '一加')
+    .replace(/(连想|联享)/g, '联想')
+    .replace(/(索妮|所尼)/g, '索尼')
+    .replace(/(家能|加能)/g, '佳能')
+    .replace(/(复士|付士)/g, '富士')
+    .replace(/(大将|大江)/g, '大疆')
+    .replace(/(你康)/g, '尼康')
+    .replace(/(黑沙)/g, '黑鲨')
+    .replace(/(美族|妹族)/g, '魅族')
+    .replace(/(爱酷|艾酷|爱库)/g, 'iqoo')
+    .replace(/(中星)/g, '中兴')
+    .replace(/(珍我)/g, '真我')
+    .replace(/\b(huwei|hawuei|huawe|huwai|huaewi|hauwei)\b/g, 'huawei')
+    .replace(/\b(xaiomi|xiaom|xiomi|xiaoi)\b/g, 'xiaomi')
+    .replace(/\b(remdi|redim|redm|redmmi)\b/g, 'redmi')
+    .replace(/\b(honer|honro|hono|hoor)\b/g, 'honor')
+    .replace(/\b(samsug|samung|samusng|samsng|samsun)\b/g, 'samsung')
+    .replace(/\b(opoo|oppp|opp)\b/g, 'oppo')
+    .replace(/\b(viov|vvo|viv)\b/g, 'vivo')
+    .replace(/\b(onepls|onepus)\b/g, 'oneplus')
+    .replace(/\b(realem|relame)\b/g, 'realme')
+    .replace(/\b(lenvo|lenov)\b/g, 'lenovo')
+    .replace(/\b(soni|sny)\b/g, 'sony')
+    .replace(/\b(canan|caon)\b/g, 'canon')
+    .replace(/\b(nikn|niko)\b/g, 'nikon')
+    // Series & suffix misspellings / Chinese transliterations
+    .replace(/(麦特|美特)/g, 'mate')
+    .replace(/(普拉)/g, 'pura')
+    .replace(/(诺瓦)/g, 'nova')
+    .replace(/(范德)/g, 'find')
+    .replace(/(麦吉克)/g, 'magic')
+    .replace(/(破麦|普罗麦克斯)/g, 'promax')
+    .replace(/(普若|普罗)/g, 'pro')
+    .replace(/(奥特拉)/g, 'ultra')
+    .replace(/(普拉斯)/g, 'plus')
+    .replace(/(米你|迷你)/g, 'mini')
+    .replace(/(口袋|云台)/g, 'pocket')
+    .replace(/(折跌)/g, '折叠')
+    .replace(/\b(mata|mtae|maet)\b/g, 'mate')
+    .replace(/\b(prua|puar)\b/g, 'pura')
+    .replace(/\b(fnid|fnd|fndi)\b/g, 'find')
+    .replace(/\b(nvoa|noav)\b/g, 'nova')
+    .replace(/\b(mgic|magci|majic)\b/g, 'magic')
+    .replace(/\b(fodl|flod)\b/g, 'fold')
+    .replace(/\b(flpi|filp)\b/g, 'flip')
+    .replace(/\b(poket|pcket)\b/g, 'pocket')
+    .replace(/\b(ulrta|utra|ultar|ulta|utla|utlra)\b/g, 'ultra')
     .replace(/\b(plsu|puls)\b/g, 'plus')
-    .replace(/\b(promx|pormax|ptomax|pro\s*mxa|por\s*max|pto\s*max)\b/g, 'promax')
-    .replace(/\b(por|pto)\b/g, 'pro')
+    .replace(/\b(mni|minii)\b/g, 'mini')
+    .replace(/\b(promx|pormax|ptomax|promxa|proamx|pro\s*mxa|por\s*max|pto\s*max)\b/g, 'promax')
+    .replace(/\b(por|pto|proo|pr0)\b/g, 'pro')
+    // Common digital electronics shorthands
     .replace(/\bmbp\b/g, 'macbook pro')
     .replace(/\bmba\b/g, 'macbook air')
-    .replace(/(\d)\s*(pm|promx|pormax)\b/g, '$1 pro max')
-    .replace(/(\d)\s*(por|pto)\b/g, '$1 pro');
+    .replace(/\ba74\b/g, 'a7m4')
+    .replace(/\br62\b/g, 'r6 mark ii')
+    .replace(/\br6m2\b/g, 'r6 mark ii')
+    .replace(/\bxt5\b/g, 'x-t5')
+    .replace(/\bm(40|50|60|70|80)(?=\s|$|p|u|r|x)/g, 'mate $1')
+    .replace(/(\d)\s*(pm|promx|pormax|promxa)\b/g, '$1 pro max')
+    .replace(/(\d)\s*(por|pto|proo)\b/g, '$1 pro')
+    .replace(/(^|[^a-z])(\d{1,3})\s*p(?=$|[^a-z0-9])/g, '$1$2 pro')
+    .replace(/(^|[^a-z])(\d{1,3})\s*u(?=$|[^a-z0-9])/g, '$1$2 ultra')
+    // Chinese numerals commonly spoken/typed for iPhone/flagship generations
+    .replace(/十八/g, '18').replace(/十七/g, '17').replace(/十六/g, '16').replace(/十五/g, '15')
+    .replace(/十四/g, '14').replace(/十三/g, '13').replace(/十二/g, '12').replace(/十一/g, '11');
 }
 function normalizeSearch(value) {
   return fixCommonTypos(value)
     .replace(/pro\s*max/g, 'promax')
     .replace(/[\s_—-]+/g, '');
 }
+function normalizeLooseText(value) {
+  return String(value).replace(/l/g, 'i').replace(/0/g, 'o');
+}
 function normalizeCodeKey(value) {
-  return String(value).normalize('NFKC').toLowerCase().replace(/[\s_—-]+/g, '');
+  return stripInvisible(value).toLowerCase().replace(/[\s_—-]+/g, '');
 }
 function normalizeCodeLookalike(value) {
   return normalizeCodeKey(value).replace(/o/g, '0').replace(/[il]/g, '1');
 }
-function editDistanceBounded(a, b, maxDist) {
-  if (Math.abs(a.length - b.length) > maxDist) return maxDist + 1;
-  let prev = Array.from({ length: b.length + 1 }, (_, i) => i);
-  for (let i = 1; i <= a.length; i++) {
+// Optimal String Alignment (Damerau-Levenshtein) bounded distance: adjacent swap costs 1
+function damerauDistBounded(a, b, maxDist) {
+  const m = a.length, n = b.length;
+  if (Math.abs(m - n) > maxDist) return maxDist + 1;
+  if (a === b) return 0;
+  let prev2 = null;
+  let prev = Array.from({ length: n + 1 }, (_, j) => j);
+  for (let i = 1; i <= m; i++) {
     const cur = [i];
     let rowMin = i;
-    for (let j = 1; j <= b.length; j++) {
+    for (let j = 1; j <= n; j++) {
       const cost = a[i - 1] === b[j - 1] ? 0 : 1;
-      const val = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + cost);
+      let val = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + cost);
+      if (i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) {
+        val = Math.min(val, prev2[j - 2] + 1);
+      }
       cur.push(val);
       if (val < rowMin) rowMin = val;
     }
     if (rowMin > maxDist) return maxDist + 1;
+    prev2 = prev;
     prev = cur;
   }
-  return prev[b.length];
+  return prev[n];
 }
-function splitSearchSpec(value) {
+function tokenizeSmart(str) {
+  const cleaned = stripInvisible(str).toLowerCase()
+    .replace(/pro\s*max/g, ' pro max ')
+    .replace(/[()（）\[\]【】\/,+·._—-]+/g, ' ');
+  const rawParts = cleaned.split(/\s+/).filter(Boolean);
+  const out = [];
+  for (const part of rawParts) {
+    // Split transitions between CJK, latin letters, and digits while keeping short alpha+digit intact if helpful
+    const segs = part.match(/[\u4e00-\u9fff]+|[a-z]+|\d+/g) || [part];
+    for (const s of segs) out.push(s);
+  }
+  return out;
+}
+function isSubsequenceMatch(needle, haystack) {
+  if (!needle || needle.length > haystack.length) return false;
+  let i = 0;
+  for (let j = 0; j < haystack.length && i < needle.length; j++) {
+    if (needle[i] === haystack[j]) i++;
+  }
+  return i === needle.length;
+}
+const NOISE_WORD_RE = /(?:国行|港版|美版|日版|韩版|澳版|台版|全网通|双卡|单卡|移动版|联通版|电信版|5g|4g|黑色|白色|金色|银色|蓝色|红色|紫色|绿色|粉色|灰色|原色|钛金属|原色钛金属|沙漠色|沙漠金|暗夜紫|远峰蓝|苍岭绿|二手|回收价|回收|报价|价格|多少钱|手机|全新|准新)/g;
+function detectCategoryHint(raw) {
+  const s = stripInvisible(raw).toLowerCase();
+  if (/(笔记本|电脑|轻薄本|游戏本|macbook|mbp|mba|thinkpad|xps|小新|拯救者|天选|matebook)/.test(s)) return 2;
+  if (/(相机|微单|单反|卡片机|云台|口袋|camera|a7m4|zv-e10|eos|x-t5|x100|pocket)/.test(s)) return 3;
+  if (/(平板|ipad|matepad|pad)/.test(s)) return 4;
+  if (/(靓机|充新)/.test(s)) return 0;
+  if (/(环保机|废旧|坏机|板机)/.test(s)) return 1;
+  return -1;
+}
+function splitSearchSpec(value, stripNoise = false) {
   let text = fixCommonTypos(value);
-  // Also support space-separated RAM+Storage like "K80 12 256" -> "K80 12+256"
-  text = text.replace(/(^|[^a-z0-9])(6|8|12|16|24)\s+(128|256|512|1024)(?:g(?:b)?)?(?=$|[^a-z0-9])/gi, '$1$2+$3');
+  // Support space/slash/hyphen separated RAM+Storage: "K80 12 256", "K80 12/256", "K80 12g+256g"
+  text = text.replace(/(^|[^a-z0-9])(6|8|12|16|24|32)g?[\s\/\-+]+(128|256|512|1024|[12]\s*t(?:b)?)(?:g(?:b)?)?(?=$|[^a-z0-9])/gi, '$1$2+$3');
   const match = text.match(/(^|[^a-z0-9])(\d{1,2}\s*\+\s*(?:64|128|256|512|1024|[12]\s*t(?:b)?)(?:g(?:b)?)?|(?:64|128|256|512|1024)(?:g(?:b)?)?|[12]\s*t(?:b)?)(?=$|[^a-z0-9])/i);
   let storage = '', ram = '';
   if (match) {
@@ -2146,59 +2279,218 @@ function splitSearchSpec(value) {
     storage = parts[parts.length - 1].replace(/g$/, '').replace(/^1024$/, '1t');
     text = text.slice(0, match.index) + match[1] + text.slice(match.index + match[0].length);
   }
-  const tokens = text.replace(/[()（）]/g, ' ').split(/[\s_—-]+/).filter(Boolean).map(t => normalizeSearch(t));
-  return { text: normalizeSearch(text).replace(/[()（）]/g, ''), storage, ram, tokens };
+  if (stripNoise) {
+    const stripped = text.replace(NOISE_WORD_RE, ' ').trim();
+    if (stripped) text = stripped;
+  }
+  const tokens = tokenizeSmart(text);
+  const compact = text.replace(/pro\s*max/g, 'promax').replace(/[()（）\[\]【】\s_—-]+/g, '');
+  return { text: compact, storage, ram, tokens };
 }
-const BRAND_ALIASES = { '苹果':['iphone','apple','苹果'], '华为':['huawei','华为'], '荣耀':['honor','荣耀'],
-  '红米':['redmi','红米'], '小米':['xiaomi','小米'], '三星':['samsung','三星'], '一加':['oneplus','一加'],
-  '真我':['realme','真我'], '联想':['lenovo','联想'], '华硕':['asus','华硕'], '戴尔':['dell','戴尔'],
-  '索尼':['sony','索尼'], '佳能':['canon','佳能'], '富士':['fujifilm','fuji','富士'], '大疆':['dji','大疆'], '尼康':['nikon','尼康'] };
+const BRAND_ALIASES = {
+  '苹果': ['iphone', 'apple', '苹果', 'pingguo', 'pg', 'ip'],
+  '华为': ['huawei', '华为', 'hw'],
+  '荣耀': ['honor', '荣耀', 'rongyao', 'ry'],
+  'OPPO': ['oppo', '欧珀', '欧泊', 'op'],
+  'VIVO': ['vivo', '维沃', 'vv'],
+  '小米': ['xiaomi', '小米', 'xm'],
+  '红米': ['redmi', '红米', 'hongmi', 'hm', 'rm'],
+  'iQOO': ['iqoo', 'iq'],
+  '一加': ['oneplus', '一加', '1+', 'yijia', 'yj'],
+  '三星': ['samsung', '三星', 'sanxing', 'sx', 'sam'],
+  '真我': ['realme', '真我', 'zhenwo', 'zw'],
+  '魅族': ['meizu', '魅族', 'mz'],
+  '努比亚': ['nubia', '努比亚', '努比', 'nby'],
+  '中兴': ['zte', '中兴', 'zhongxing', 'zx'],
+  '联想': ['lenovo', '联想', 'lianxiang', 'lx'],
+  '华硕': ['asus', '华硕', 'huashuo', 'hs'],
+  '戴尔': ['dell', '戴尔', 'daier'],
+  '索尼': ['sony', '索尼', 'suoni', 'sn'],
+  '佳能': ['canon', '佳能', 'jianeng', 'jn'],
+  '富士': ['fujifilm', 'fuji', '富士', 'fushi', 'fs'],
+  '大疆': ['dji', '大疆', 'dajiang', 'dj'],
+  '尼康': ['nikon', '尼康', 'nikang', 'nk'],
+  '黑鲨': ['blackshark', '黑鲨', 'heisha'],
+  '摩托罗拉': ['motorola', 'moto', '摩托罗拉', '摩托', 'motuo'],
+  '诺基亚': ['nokia', '诺基亚', '诺基', 'nuojiya'],
+  '锤子/坚果': ['smartisan', '锤子', '坚果', 'chuizi', 'jianguo'],
+  '酷派/ivvi': ['coolpad', 'ivvi', '酷派', 'kupai'],
+  '金立': ['gionee', '金立', 'jinli'],
+  '海信': ['hisense', '海信', 'haixin'],
+  '美图': ['meitu', '美图'],
+  '黑莓': ['blackberry', '黑莓', 'heimei'],
+};
+const RELATED_BRANDS = {
+  '小米': ['红米', '黑鲨'],
+  '红米': ['小米'],
+  'VIVO': ['iQOO'],
+  'iQOO': ['VIVO'],
+  'OPPO': ['一加', '真我'],
+  '一加': ['OPPO'],
+  '真我': ['OPPO'],
+  '华为': ['荣耀'],
+  '荣耀': ['华为'],
+  '华硕': ['其他品牌'],
+  '联想': ['摩托罗拉'],
+};
 function aliasesForBrand(index) {
   const name = getBrandObj(index).name;
-  return (BRAND_ALIASES[name] || [name]).map(normalizeSearch);
+  return (BRAND_ALIASES[name] || [name]).map(a => stripInvisible(a).toLowerCase().replace(/\s+/g, ''));
 }
 function stripModelBrand(text, index) {
   let result = text;
-  for (const alias of aliasesForBrand(index)) if (result.startsWith(alias)) result = result.slice(alias.length);
+  for (const alias of aliasesForBrand(index)) if (alias.length >= 2 && result.startsWith(alias)) result = result.slice(alias.length);
   return result;
 }
-const SEARCH_INDEX = RAW.models.map(m => ({
-  m,
-  name: stripModelBrand(splitSearchSpec(m[4]).text, m[2]),
-  fullText: splitSearchSpec(m[4]).text,
-  codes: m[5].map(normalizeCodeKey),
-  codesLoose: m[5].map(normalizeCodeLookalike),
-  caps: parseModelDimensions(m).caps.map(cap => ({ cap, ...splitSearchSpec(cap) })),
-  embedded: splitSearchSpec(m[4]),
-}));
-function searchAllModels(rawQ, brandIdxFilter = -1) {
+function getRelatedBrandIndices(brandIdx) {
+  if (brandIdx < 0) return [];
+  const names = RELATED_BRANDS[getBrandObj(brandIdx).name] || [];
+  return names.map(n => getBrandIdxByName(n)).filter(i => i >= 0);
+}
+const SEARCH_INDEX = RAW.models.map(m => {
+  const brandName = getBrandObj(m[2]).name;
+  const embedded = splitSearchSpec(m[4], false);
+  const name = stripModelBrand(embedded.text, m[2]);
+  const fullWithBrand = `${brandName} ${m[3]} ${m[4]}`;
+  const py = toPinyinData(fullWithBrand.toLowerCase());
+  const pyName = toPinyinData(m[4].toLowerCase());
+  const rawTokens = tokenizeSmart(`${m[4]} ${m[3]}`);
+  const tokenSet = Array.from(new Set(rawTokens));
+  const numTokens = tokenSet.filter(t => /^\d+$/.test(t));
+  return {
+    m,
+    name,
+    nameLoose: normalizeLooseText(name),
+    fullText: embedded.text,
+    fullLoose: normalizeLooseText(embedded.text),
+    tokens: tokenSet,
+    tokensLoose: tokenSet.map(normalizeLooseText),
+    numTokens,
+    pyFull: py.full,
+    pyInit: py.init,
+    pyNameFull: pyName.full,
+    pyNameInit: pyName.init,
+    codes: m[5].map(normalizeCodeKey),
+    codesLoose: m[5].map(normalizeCodeLookalike),
+    caps: parseModelDimensions(m).caps.map(cap => ({ cap, ...splitSearchSpec(cap, false) })),
+    embedded,
+  };
+});
+function detectBrandFromQuery(query) {
+  // 1. Exact alias match at start of compact text or as standalone token (supports "苹果16" AND "16 pro max 苹果")
+  let best = null;
+  for (let index = 0; index < RAW.brands.length; index++) {
+    for (const alias of aliasesForBrand(index)) {
+      if (alias.length <= 1) continue;
+      // Short 2-letter Latin pinyin abbreviations (pg/hw/xm/hm/ry/sx/op/vv/sn/jn/fs/dj/nk/ip/iq/rm/yj/zw/mz/zx/lx/hs) require standalone token or followed by digit/CJK
+      const isShortLatin = /^[a-z]{2}$/.test(alias);
+      const tokenHit = query.tokens.includes(alias);
+      const prefixHit = !isShortLatin
+        ? query.text.startsWith(alias)
+        : (query.text.startsWith(alias) && /^[\d\u4e00-\u9fff]/.test(query.text.slice(alias.length)));
+      if (tokenHit || prefixHit) {
+        if (!best || alias.length > best.alias.length || (alias.length === best.alias.length && prefixHit && !best.prefixHit)) {
+          best = { index, alias, fuzzy: false, prefixHit };
+        }
+      }
+    }
+  }
+  if (best) return best;
+  // 2. Fuzzy brand token match (Damerau-Levenshtein dist 1 on alpha token len >= 4, e.g. "huaewi", "samsng", "iphoen", "lenvo")
+  for (const tok of query.tokens) {
+    if (!/^[a-z]{4,}$/.test(tok)) continue;
+    for (let index = 0; index < RAW.brands.length; index++) {
+      for (const alias of aliasesForBrand(index)) {
+        if (!/^[a-z]{4,}$/.test(alias)) continue;
+        if (damerauDistBounded(tok, alias, 1) <= 1) {
+          return { index, alias: tok, fuzzy: true, prefixHit: query.text.startsWith(tok) };
+        }
+      }
+    }
+  }
+  return null;
+}
+function matchTokenFuzzy(qTok, entry) {
+  const qLoose = normalizeLooseText(qTok);
+  // Direct token exact or prefix match
+  for (let i = 0; i < entry.tokens.length; i++) {
+    const et = entry.tokens[i];
+    const etLoose = entry.tokensLoose[i];
+    if (et === qTok || etLoose === qLoose) return { score: 10, fuzzy: et !== qTok };
+    if (/^\d+$/.test(qTok)) {
+      // Numbers require exact token match (avoid "16" matching "160") unless 4+ digits
+      if (qTok.length >= 4 && et.includes(qTok)) return { score: 8, fuzzy: false };
+    } else if (qTok.length >= 2 && (et.startsWith(qTok) || etLoose.startsWith(qLoose))) {
+      return { score: 8, fuzzy: false };
+    }
+  }
+  // Substring inside name / fullText / pinyin (great for "zhedie", "zhengjiuzhe", "feifandashi", "zhizunban")
+  if (entry.name.includes(qTok) || entry.fullText.includes(qTok) || entry.nameLoose.includes(qLoose)) {
+    return { score: 7, fuzzy: !entry.fullText.includes(qTok) };
+  }
+  if (/^[a-z]{2,}$/.test(qTok)) {
+    if (entry.pyNameFull.includes(qTok) || entry.pyFull.includes(qTok)) return { score: 7, fuzzy: true, isPinyin: true };
+    if (qTok.length >= 2 && qTok.length <= 6 && (entry.pyNameInit.includes(qTok) || entry.pyInit.includes(qTok))) {
+      return { score: 6, fuzzy: true, isPinyin: true };
+    }
+  }
+  // Damerau-Levenshtein typo tolerance per alphabetic token (len >= 3)
+  if (/^[a-z]{3,}$/.test(qTok)) {
+    const maxD = qTok.length >= 6 ? 2 : 1;
+    let bestD = maxD + 1;
+    for (let i = 0; i < entry.tokens.length; i++) {
+      const et = entry.tokens[i];
+      if (!/^[a-z]{3,}$/.test(et)) continue;
+      // Avoid short 3-letter words fuzzy-matching unrelated 3-letter words unless sharing first char or transposition
+      if (qTok.length === 3 && et.length === 3 && qTok[0] !== et[0] && !(qTok[0] === et[1] && qTok[1] === et[0])) continue;
+      const d = damerauDistBounded(qLoose, entry.tokensLoose[i], maxD);
+      if (d < bestD) bestD = d;
+    }
+    if (bestD <= maxD) return { score: 6 - bestD, fuzzy: true };
+  }
+  return null;
+}
+function runSearchPass(rawQ, query, brandScope, catHint, explicitBrandAlias, usedBrandFuzzy, fallbackMode = '') {
+  const isFallbackPass = Boolean(fallbackMode);
+  const fallbackPrefix = fallbackMode === 'global' ? '跨品牌纠错' : '关联品牌';
   const rawCodeKey = normalizeCodeKey(rawQ);
   const rawCodeLoose = normalizeCodeLookalike(rawQ);
   const looksLikeModelNo = /^[a-z0-9]{3,}$/.test(rawCodeKey) && /\d/.test(rawCodeKey);
-  const query = splitSearchSpec(rawQ);
-  if (!query.text && !query.storage && !looksLikeModelNo) return [];
 
-  let brand = brandIdxFilter, name = query.text;
-  let explicitBrandAlias = '';
-  const explicit = RAW.brands.map((_, index) => ({ index, alias: aliasesForBrand(index).find(a => name.startsWith(a)) }))
-    .filter(x => x.alias).sort((a,b) => b.alias.length - a.alias.length)[0];
-  if (explicit) {
-    if (brand >= 0 && brand !== explicit.index) return [];
-    brand = explicit.index;
-    explicitBrandAlias = explicit.alias;
-    name = name.slice(explicit.alias.length);
+  let name = query.text;
+  if (explicitBrandAlias) {
+    if (name.startsWith(explicitBrandAlias)) name = name.slice(explicitBrandAlias.length);
+    else if (name.endsWith(explicitBrandAlias)) name = name.slice(0, -explicitBrandAlias.length);
   }
+  const nameLoose = normalizeLooseText(name);
   const cleanTokens = query.tokens.filter(t => t && t !== explicitBrandAlias);
+  const queryNums = cleanTokens.filter(t => /^\d+$/.test(t));
   const specMatches = spec => spec.storage === query.storage && (!query.ram || spec.ram === query.ram);
-  const results = [];
-  const fuzzyCandidates = [];
+
+  const primary = [];
+  const fuzzyPool = [];
 
   for (const entry of SEARCH_INDEX) {
     const { m } = entry;
-    if (brand >= 0 && m[2] !== brand) continue;
+    if (brandScope && !brandScope.has(m[2])) continue;
 
-    // 1. Model No. matching (exact > lookalike/hyphen-free > partial code)
-    let codeRank = 0, matchedCode = '';
+    // Spec filter (RAM/Storage)
+    let preCap = '', specRank = 0;
+    if (query.storage) {
+      const matches = entry.caps.filter(specMatches);
+      if (matches.length) {
+        specRank = 2;
+        if (matches.length === 1 && (!matches[0].ram || query.ram === matches[0].ram)) preCap = matches[0].cap;
+      } else if (entry.embedded.storage) {
+        if (!specMatches(entry.embedded)) continue;
+        specRank = 2;
+      } else if (entry.caps.some(x => x.storage)) continue;
+    }
+
+    const catBonus = (catHint >= 0 && m[1] === catHint) ? 3 : 0;
+
+    // Tier 1: Model No. matching (exact > lookalike/hyphen-free > partial > 1-edit/transposed)
+    let codeRank = 0, matchedCode = '', codeFuzzy = false;
     if (looksLikeModelNo && entry.codes.length) {
       const exactIdx = entry.codes.indexOf(rawCodeKey);
       if (exactIdx >= 0) {
@@ -2216,72 +2508,184 @@ function searchAllModels(rawQ, brandIdxFilter = -1) {
       }
     }
 
-    // 2. Standard name matching
-    let rank = codeRank || (name && entry.name === name ? 80 :
-      name && entry.name.startsWith(name) && !(/^\d/.test(entry.name.slice(name.length)) && /\d$/.test(name)) ? 60 :
-      name && entry.name.includes(name) ? 40 :
-      !name && (brand >= 0 || query.storage) ? 20 : 0);
+    // Tier 2: Direct name / prefix / substring / lookalike match
+    let rank = codeRank;
+    let reason = codeRank ? `Model No. ${matchedCode}` : '';
+    let isFuzzyHit = usedBrandFuzzy || isFallbackPass;
 
-    // 3. Token-bag order-independent tolerance (e.g. "max 16 pro", "pro x8 find")
-    let fuzzyReason = '';
-    if (!rank && cleanTokens.length >= 2 && cleanTokens.every(t => entry.name.includes(t) || entry.fullText.includes(t))) {
-      rank = 34;
-      fuzzyReason = '智能容错';
+    if (!rank && name) {
+      if (entry.name === name) {
+        rank = 85; reason = usedBrandFuzzy ? '拼写容错' : '型号匹配';
+      } else if (entry.nameLoose === nameLoose) {
+        rank = 80; reason = '智能容错'; isFuzzyHit = true;
+      } else if (entry.name.startsWith(name) && !(/^\d/.test(entry.name.slice(name.length)) && /\d$/.test(name))) {
+        rank = 72; reason = usedBrandFuzzy ? '拼写容错' : '型号匹配';
+      } else if (entry.name.includes(name) && !(/^\d/.test(entry.name.slice(entry.name.indexOf(name) + name.length)) && /\d$/.test(name))) {
+        rank = 62; reason = usedBrandFuzzy ? '拼写容错' : '型号匹配';
+      } else if (entry.nameLoose.includes(nameLoose) && nameLoose.length >= 3) {
+        rank = 58; reason = '智能容错'; isFuzzyHit = true;
+      }
+    } else if (!rank && !name && (brandScope || query.storage || catHint >= 0)) {
+      rank = 24; reason = specRank ? '规格匹配' : '品牌浏览';
     }
 
-    let preCap = '', specRank = 0;
-    if (query.storage) {
-      const matches = entry.caps.filter(specMatches);
-      if (matches.length) {
-        specRank = 2;
-        if (matches.length === 1 && (!matches[0].ram || query.ram === matches[0].ram)) preCap = matches[0].cap;
-      } else if (entry.embedded.storage) {
-        if (!specMatches(entry.embedded)) continue;
-        specRank = 2;
-      } else if (entry.caps.some(x => x.storage)) continue;
+    // Tier 3 & 4: Per-token order-independent + Pinyin + Damerau-Levenshtein fuzzy match
+    if (!rank && cleanTokens.length > 0) {
+      let allMatched = true, tokenScore = 0, anyFuzzy = usedBrandFuzzy, anyPinyin = false;
+      for (const tok of cleanTokens) {
+        const res = matchTokenFuzzy(tok, entry);
+        if (!res) { allMatched = false; break; }
+        tokenScore += res.score;
+        if (res.fuzzy) anyFuzzy = true;
+        if (res.isPinyin) anyPinyin = true;
+      }
+      if (allMatched) {
+        const avg = tokenScore / cleanTokens.length;
+        rank = Math.round(anyFuzzy ? (28 + avg * 1.6) : (46 + avg));
+        isFuzzyHit = anyFuzzy || isFallbackPass;
+        reason = anyPinyin ? '拼音/简称' : (anyFuzzy ? '智能容错' : '智能匹配');
+      }
     }
 
     if (rank) {
-      results.push({
-        m, rank, specRank, preCap,
-        reason: codeRank ? `Model No. ${matchedCode}` : (fuzzyReason || (specRank ? '规格匹配' : '型号匹配')),
+      primary.push({
+        m, rank: rank + catBonus, specRank, preCap, isFuzzy: isFuzzyHit,
+        reason: isFallbackPass ? `${fallbackPrefix} · ${codeRank ? reason : (specRank ? '规格匹配' : '型号匹配')}` : (codeRank ? reason : (specRank && !isFuzzyHit ? '规格匹配' : reason)),
       });
-    } else if ((name && name.length >= 4) || (looksLikeModelNo && rawCodeKey.length >= 4)) {
-      // Collect edit-distance fuzzy candidates in case direct match yields few/no results
-      const maxD = (name || rawCodeKey).length >= 7 ? 2 : 1;
-      let bestDist = maxD + 1;
-      let codeNear = '';
-      if (name && name.length >= 4 && entry.name.length >= 3) {
-        const d = editDistanceBounded(name, entry.name, maxD);
-        if (d < bestDist) bestDist = d;
-      }
+      continue;
+    }
+
+    // Tier 5: Jammed-string Damerau-Levenshtein / Subsequence / Near Model No. fallback
+    const key = nameLoose || rawCodeLoose;
+    if (key.length >= 4 || (looksLikeModelNo && rawCodeKey.length >= 4)) {
+      // Guardrail: if query contains digits (e.g. "16", "70", "200"), require candidate to share at least one digit token unless checking near Model No.
+      const digitsOk = queryNums.length === 0 || queryNums.some(n => entry.numTokens.includes(n) || entry.name.includes(n));
+      let bestFuzzyRank = 0, bestReason = '';
+
+      // 5a. Near Model No. (1 edit or adjacent swap, e.g. A3279 -> A3297, PKU119 -> PKU110)
       if (looksLikeModelNo && entry.codesLoose.length) {
         for (let ci = 0; ci < entry.codesLoose.length; ci++) {
           const c = entry.codesLoose[ci];
           if (c.length < 4) continue;
-          const d = editDistanceBounded(rawCodeLoose, c, 1);
-          if (d < bestDist) { bestDist = d; codeNear = m[5][ci]; }
+          const d = damerauDistBounded(rawCodeLoose, c, 1);
+          if (d <= 1) {
+            bestFuzzyRank = 86;
+            bestReason = `相近 Model No. ${m[5][ci]}`;
+            break;
+          }
         }
       }
-      if (bestDist <= maxD) {
-        fuzzyCandidates.push({
-          m, rank: 28 - bestDist * 4, specRank, preCap,
-          reason: codeNear ? `相近 Model No. ${codeNear}` : '拼写容错',
+
+      // 5b. Whole-string Damerau-Levenshtein (catches jammed typos like "iphon16promx", "findx8utra", "xiomi15utra")
+      if (!bestFuzzyRank && nameLoose.length >= 4 && entry.nameLoose.length >= 3 && digitsOk) {
+        const maxD = nameLoose.length >= 8 ? 2 : (nameLoose.length >= 5 ? 2 : 1);
+        const dName = damerauDistBounded(nameLoose, entry.nameLoose, maxD);
+        const dFull = damerauDistBounded(nameLoose, entry.fullLoose, maxD);
+        const d = Math.min(dName, dFull);
+        // Precision guard: require edit ratio <= 0.34 (so 4-char allows 1, 6-char allows 2, never matches random gibberish)
+        if (d <= maxD && (d / Math.max(nameLoose.length, 1)) <= 0.34) {
+          bestFuzzyRank = 26 - d * 4;
+          bestReason = '拼写容错';
+        }
+      }
+
+      // 5c. Ordered subsequence skeleton match (e.g. "16prmx" -> "16promax", "m70pr" -> "mate70pro")
+      if (!bestFuzzyRank && nameLoose.length >= 4 && digitsOk && /\d/.test(nameLoose) && /[a-z]/.test(nameLoose)) {
+        const target = entry.nameLoose;
+        if (target.length >= nameLoose.length && target.length <= nameLoose.length + 5 && isSubsequenceMatch(nameLoose, target)) {
+          bestFuzzyRank = 22 - Math.min(4, target.length - nameLoose.length);
+          bestReason = '缩写容错';
+        }
+      }
+
+      if (bestFuzzyRank > 0) {
+        fuzzyPool.push({
+          m, rank: bestFuzzyRank + catBonus, specRank, preCap, isFuzzy: true,
+          reason: isFallbackPass ? `${fallbackPrefix} · ${bestReason}` : bestReason,
         });
       }
     }
   }
 
-  const finalList = results.length ? results : fuzzyCandidates;
-  finalList.sort((a,b) => Number(b.rank >= 90) - Number(a.rank >= 90) || b.specRank - a.specRank || b.rank - a.rank ||
-    Number(b.m[1] === state.lastCat) - Number(a.m[1] === state.lastCat) || a.m[4].localeCompare(b.m[4], 'zh-CN', { numeric:true }));
+  return primary.length ? primary : fuzzyPool;
+}
+function searchAllModels(rawQ, brandIdxFilter = -1) {
+  const cleanRaw = stripInvisible(rawQ).trim();
+  if (!cleanRaw) return [];
+  const catHint = detectCategoryHint(cleanRaw);
+  const queryStrict = splitSearchSpec(cleanRaw, false);
+  const queryClean = splitSearchSpec(cleanRaw, true);
+  const query = (queryClean.text || queryClean.storage) ? queryClean : queryStrict;
+  const rawCodeKey = normalizeCodeKey(cleanRaw);
+  const looksLikeModelNo = /^[a-z0-9]{3,}$/.test(rawCodeKey) && /\d/.test(rawCodeKey);
+  if (!query.text && !query.storage && !looksLikeModelNo && catHint < 0) return [];
+
+  const detected = detectBrandFromQuery(query);
+  if (brandIdxFilter >= 0 && detected && !detected.fuzzy && detected.index !== brandIdxFilter) {
+    // Respect explicit brand filter chip when user queries another brand
+    return [];
+  }
+
+  let brandScope = null;
+  let explicitBrandAlias = '';
+  let usedBrandFuzzy = false;
+  if (brandIdxFilter >= 0) {
+    brandScope = new Set([brandIdxFilter]);
+    if (detected && detected.index === brandIdxFilter) {
+      explicitBrandAlias = detected.alias;
+      usedBrandFuzzy = detected.fuzzy;
+    }
+  } else if (detected) {
+    brandScope = new Set([detected.index]);
+    explicitBrandAlias = detected.alias;
+    usedBrandFuzzy = detected.fuzzy;
+  }
+
+  let finalList = runSearchPass(cleanRaw, query, brandScope, catHint, explicitBrandAlias, usedBrandFuzzy, '');
+
+  // Sub-brand family fallback when global search (brandIdxFilter === -1) yields 0 hits
+  // e.g. "小米 K80" -> falls back to 红米 / 黑鲨; "vivo iqoo 13" -> iQOO; "华硕 rog 9" -> ROG
+  if (!finalList.length && brandIdxFilter === -1 && detected) {
+    const related = getRelatedBrandIndices(detected.index);
+    if (related.length) {
+      finalList = runSearchPass(cleanRaw, query, new Set(related), catHint, explicitBrandAlias, false, 'related');
+    }
+  }
+
+  // Last-resort global relaxation when user typed wrong brand + real model (e.g. "苹果 Mate 70" -> Mate 70)
+  if (!finalList.length && brandIdxFilter === -1 && detected && query.tokens.length >= 2) {
+    finalList = runSearchPass(cleanRaw, query, null, catHint, explicitBrandAlias, true, 'global');
+  }
+
+  finalList.sort((a, b) =>
+    Number(b.rank >= 86) - Number(a.rank >= 86) ||
+    b.specRank - a.specRank ||
+    b.rank - a.rank ||
+    Number(b.m[1] === state.lastCat) - Number(a.m[1] === state.lastCat) ||
+    a.m[4].localeCompare(b.m[4], 'zh-CN', { numeric: true })
+  );
   return finalList;
+}
+function highlightSearchTitle(title, rawQ) {
+  const safeTitle = esc(title);
+  const q = stripInvisible(rawQ).trim();
+  if (!q) return safeTitle;
+  const tokens = Array.from(new Set(tokenizeSmart(fixCommonTypos(q)).filter(t => t.length >= 2 || /^\d+$/.test(t))))
+    .sort((a, b) => b.length - a.length).slice(0, 5);
+  if (!tokens.length) return safeTitle;
+  const pattern = tokens.map(t => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
+  try {
+    return safeTitle.replace(new RegExp(`(${pattern})`, 'gi'), '<mark class="search-hl">$1</mark>');
+  } catch (_) {
+    return safeTitle;
+  }
 }
 
 function renderSearch() {
   const q = state.searchQuery;
   const results = q.trim() ? searchAllModels(q, state.searchBrandIdx) : [];
   const isAmbiguous = q.trim().length > 0 && q.trim().length <= 2 && results.length > 1;
+  const allFuzzy = results.length > 0 && results.slice(0, 5).every(r => r.isFuzzy);
   const hotBrands = RAW.brands.map((b, i) => ({ ...b, idx: i })).filter(b => b.hot);
 
   let content = '';
@@ -2297,9 +2701,9 @@ function renderSearch() {
         </div>
       </div>
       <div class="ui-card">
-        <div class="ui-card-hd"><span class="ui-card-title">常用搜索（支持简称 / Model No. / 拼写容错）</span></div>
+        <div class="ui-card-hd"><span class="ui-card-title">常用搜索（支持简称 / 拼音 / 错别字 / Model No.）</span></div>
         <div style="padding:2px 14px 14px;display:flex;flex-wrap:wrap;gap:6px;">
-          ${['16pm 256', 'A3297', 'MacBook M4', 'A7M4', 'iPad Pro', 'PKU110', 'ipone 16', 'K80 12+256'].map(ex => `<button type="button" class="chip chip-sm" onclick="state.searchQuery='${ex}';state.searchLimit=40;render()">${ex}</button>`).join('')}
+          ${['16pm 256', 'A3297', 'iphoen 16 pr', '平果 16', '华为 m70p', 'MacBook M4', 'A7M4', 'K80 12 256'].map(ex => `<button type="button" class="chip chip-sm" onclick="state.searchQuery='${ex}';state.searchLimit=40;render()">${ex}</button>`).join('')}
         </div>
       </div>
     `;
@@ -2308,7 +2712,7 @@ function renderSearch() {
       <div class="ui-card" style="padding:36px 20px;text-align:center;">
         <i class="weui-icon-info weui-icon_msg" style="color:var(--ink-3);"></i>
         <h2 style="font-size:17px;font-weight:600;color:var(--ink-1);margin:14px 0 6px;">未找到匹配结果</h2>
-        <p style="font-size:13.5px;color:var(--ink-2);line-height:1.55;margin:0 0 20px;">未找到与“${esc(q)}”匹配的机型，可尝试标准名称或机身 Model No.；若确未收录可提交反馈。</p>
+        <p style="font-size:13.5px;color:var(--ink-2);line-height:1.55;margin:0 0 20px;">未找到与“${esc(q)}”匹配的机型，可尝试型号简称、拼音或机身 Model No.；若确未收录可提交反馈。</p>
         <a href="javascript:;" class="ui-btn ui-btn-primary ui-btn-block" data-query="${esc(q)}" onclick="navigate('feedback', { feedbackType:'missing_model', feedbackText:'机型搜索问题：'+this.dataset.query })">反馈机型问题</a>
       </div>
     `;
@@ -2316,6 +2720,7 @@ function renderSearch() {
     const sliced = results.slice(0, state.searchLimit);
     content = `
       ${isAmbiguous ? `<div class="offline-strip">找到 ${results.length} 款相近机型，请点选确认。</div>` : ''}
+      ${(!isAmbiguous && allFuzzy) ? `<div class="fuzzy-tip-strip"><span>已智能容错匹配相近机型（支持拼音、简称、错别字与 Model No.）</span></div>` : ''}
       <div class="ui-section-hd"><span>共找到 ${results.length} 款机型</span><span>列表为最高参考价</span></div>
       <div class="ui-card" style="margin-top:0;">
         <div class="weui-cells">
@@ -2327,7 +2732,7 @@ function renderSearch() {
               <a href="javascript:;" class="weui-cell weui-cell_access compact-cell" onclick="navigate('model-detail', { modelId:${m[0]}, cap:'${esc(preCap)}' })">
                 <div class="weui-cell__hd" style="margin-right:10px;">${renderBrandLogo(b, 'sm')}</div>
                 <div class="weui-cell__bd" style="min-width:0;">
-                  <p class="model-name-txt">${esc(m[4])}</p>
+                  <p class="model-name-txt">${highlightSearchTitle(m[4], q)}</p>
                   <p class="model-meta-txt">${esc(meta)}</p>
                 </div>
                 <div class="weui-cell__ft">${renderListMaxPriceHtml(m, preCap)}</div>
@@ -2349,7 +2754,7 @@ function renderSearch() {
       <div class="search-top-bar">
         <div class="search-pill">
           ${SVG.search}
-          <input type="text" inputmode="search" enterkeyhint="search" aria-label="搜索机型" id="searchInput" placeholder="输入机型、简称或 Model No.（如 A3297）" value="${esc(q)}" oncompositionstart="state.composing=true" oncompositionend="state.composing=false;state.searchQuery=this.value;state.searchLimit=40;keepSearchFocus()" oninput="state.searchQuery=this.value;if(!state.composing){state.searchLimit=40;keepSearchFocus()}" />
+          <input type="text" inputmode="search" enterkeyhint="search" aria-label="搜索机型" id="searchInput" placeholder="搜型号、简称、拼音或 Model No." value="${esc(q)}" oncompositionstart="state.composing=true" oncompositionend="state.composing=false;state.searchQuery=this.value;state.searchLimit=40;keepSearchFocus()" oninput="state.searchQuery=this.value;if(!state.composing){state.searchLimit=40;keepSearchFocus()}" />
           ${q ? `<button type="button" class="search-clear-btn" aria-label="清空" onclick="state.searchQuery='';keepSearchFocus()">×</button>` : ''}
         </div>
         <a href="javascript:;" class="search-cancel-link" onclick="goBack()">取消</a>
